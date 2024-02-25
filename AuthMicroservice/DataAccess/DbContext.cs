@@ -1,8 +1,7 @@
 ﻿using AuthMicroservice.Model;
-
-namespace AuthMicroservice.Data;
 using Microsoft.EntityFrameworkCore;
 
+namespace AuthMicroservice.DataAccess;
 public class DbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     public DbContext(DbContextOptions<DbContext> options)
