@@ -52,7 +52,24 @@ public class UserService : IUserService
 
         return _userRepository.UpdateUser(user);
     }
+
+    public User DeleteUser(Guid userId)
+    {
+        if (userId == null)
+        {
+            throw new ValidationException("Could not find user id");
+        }
+
+        return _userRepository.DeleteUser(userId);
+    }
     
+    public User GetUserByEmail(string userEmail)
+    {
+        
+        return _userRepository.GetUserByEmail(userEmail);
+    }
+
+
 }
 
         

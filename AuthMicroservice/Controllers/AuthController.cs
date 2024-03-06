@@ -10,10 +10,13 @@ public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly HashingLogic _hashingLogic;
-    public AuthController(IUserService userService, HashingLogic hashingLogic)
+    private readonly Authentication _authentication;
+    public AuthController(IUserService userService, HashingLogic hashingLogic, Authentication authentication)
     {
         _userService = userService;
         _hashingLogic = hashingLogic;
+        _authentication = authentication;
+        
     }
 
     [HttpPost]
@@ -54,10 +57,10 @@ public class AuthController : ControllerBase
     
     [HttpPut]
     [Route("update")]
-    public ActionResult<User> UpdateUser(Guid userID, [FromBody] UserDto userDto, string password)
+    public ActionResult<User> UpdateUser(Guid userId, [FromBody] UserDto userDto, string password)
     {
                
-        var actualUser = _userService.GetUserById(userID);
+        var actualUser = _userService.GetUserById(userId);
         try
         {
             if(!_hashingLogic.ValidateHash(password, actualUser.HashPassword, actualUser.SaltPassword))
@@ -73,7 +76,7 @@ public class AuthController : ControllerBase
         }
         catch (KeyNotFoundException e)
         {
-            return NotFound("No User found at ID " + userID);
+            return NotFound("No User found at ID " + userId);
         }
         catch (Exception e)
         {
@@ -81,5 +84,53 @@ public class AuthController : ControllerBase
         }
     }
     
+    
+    [HttpDelete]
+    [Route("delete")]
+    public ActionResult<User> DeleteUserById(Guid userId)
+    {
+        try
+        {
+            return Ok(_userService.DeleteUser(userId));
+        }
+        catch (KeyNotFoundException e)
+        {
+            return NotFound("No specification found at ID " + userId);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.ToString());
+        }
+    }
+    [HttpPost("login")]
+    public async Task<ActionResult<string>> Login(UserDto userDto)
+    {
+        try
+        {
+            var currentUser = _userService.GetUserByEmail(userDto.Email.ToLower());
+            if(currentUser == null)
+                return BadRequest("Wrong password or Email.");
+            if (currentUser.Email != userDto.Email.ToLower())
+            {
+                return BadRequest("Wrong password or Email.");
+            }
+
+            if (!_hashingLogic.ValidateHash(userDto.password, currentUser.HashPassword, currentUser.SaltPassword))
+            {
+                return BadRequest("Wrong password or Email.");
+            }
+
+            string token = _authentication.CreateToken(currentUser);
+            return Ok(token);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
     
 }

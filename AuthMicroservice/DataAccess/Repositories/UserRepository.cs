@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
 
     public User GetUserById(Guid userId)
     { 
-        var userToFind = _dbContext.UsersTable.FirstOrDefault(u => u.Id.Equals(userId));
+        var userToFind = _dbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
         return userToFind;
     }
     
@@ -36,19 +36,25 @@ public class UserRepository : IUserRepository
         return user;
     }
     
-    public async  Task DeleteUserAsync(Guid userId)
+    public User DeleteUser(Guid userId)
     {
-        var userToDelete = await _dbContext.UsersTable.FindAsync(userId);
+        var userToDelete =  _dbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
 
         if (userToDelete !=null)
         {
-            _dbContext.UsersTable.Remove(userToDelete);
-            await _dbContext.SaveChangesAsync();
+             _dbContext.UsersTable.Remove(userToDelete);
+             _dbContext.SaveChangesAsync();
         }
+        // returning deleted user for now. may need to change //TODO
+        return userToDelete;
     }
 
-    public Task<User> ValidateUserLoginAsync(string username, string password)
+
+    
+    public User GetUserByEmail(string userEmail)
     {
-        throw new NotImplementedException();
+        
+        return _dbContext.UsersTable.FirstOrDefault(u => u.Email == userEmail)!;;
     }
+
 }

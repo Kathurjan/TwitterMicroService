@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj": {}
+    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj": {}
   },
   "projects": {
-    "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj": {
+    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
+        "projectUniqueName": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
         "projectName": "AuthMicroservice",
-        "projectPath": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
-        "packagesPath": "C:\\Users\\Filip\\.nuget\\packages\\",
-        "outputPath": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\obj\\",
+        "projectPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
+        "packagesPath": "C:\\Users\\aweso\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Filip\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\aweso\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -66,6 +66,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.4.0, )"
             }
           },
           "imports": [

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\5th\\TwitterMicroService\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj": {}
+    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj": {}
   },
   "projects": {
-    "D:\\5th\\TwitterMicroService\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj": {
+    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\5th\\TwitterMicroService\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj",
+        "projectUniqueName": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj",
         "projectName": "UserInteractionMicroservice",
-        "projectPath": "D:\\5th\\TwitterMicroService\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj",
-        "packagesPath": "C:\\Users\\Filip\\.nuget\\packages\\",
-        "outputPath": "D:\\5th\\TwitterMicroService\\UserInteractionMicroservice\\obj\\",
+        "projectPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\UserInteractionMicroservice\\UserInteractionMicroservice.csproj",
+        "packagesPath": "C:\\Users\\aweso\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\UserInteractionMicroservice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Filip\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\aweso\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
