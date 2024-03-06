@@ -9,5 +9,5 @@ public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<User> UsersTable { get; set; }
 }

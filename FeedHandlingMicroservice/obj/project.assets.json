@@ -469,19 +469,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\aweso\\.nuget\\packages\\": {}
+    "C:\\Users\\Filip\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\FeedHandlingMicroservice\\FeedHandlingMicroservice.csproj",
+      "projectUniqueName": "D:\\5th\\TwitterMicroService\\FeedHandlingMicroservice\\FeedHandlingMicroservice.csproj",
       "projectName": "FeedHandlingMicroservice",
-      "projectPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\FeedHandlingMicroservice\\FeedHandlingMicroservice.csproj",
-      "packagesPath": "C:\\Users\\aweso\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\FeedHandlingMicroservice\\obj\\",
+      "projectPath": "D:\\5th\\TwitterMicroService\\FeedHandlingMicroservice\\FeedHandlingMicroservice.csproj",
+      "packagesPath": "C:\\Users\\Filip\\.nuget\\packages\\",
+      "outputPath": "D:\\5th\\TwitterMicroService\\FeedHandlingMicroservice\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\aweso\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Filip\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"

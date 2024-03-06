@@ -2,6 +2,22 @@
   "version": 3,
   "targets": {
     "net7.0": {
+      "AutoMapper/13.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Options": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/AutoMapper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/AutoMapper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "EntityFramework/6.4.4": {
         "type": "package",
         "dependencies": {
@@ -655,6 +671,21 @@
     }
   },
   "libraries": {
+    "AutoMapper/13.0.1": {
+      "sha512": "/Fx1SbJ16qS7dU4i604Sle+U9VLX+WSNVJggk6MupKVkYvvBm4XqYaeFuf67diHefHKHs50uQIS2YEDFhPCakQ==",
+      "type": "package",
+      "path": "automapper/13.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "automapper.13.0.1.nupkg.sha512",
+        "automapper.nuspec",
+        "icon.png",
+        "lib/net6.0/AutoMapper.dll",
+        "lib/net6.0/AutoMapper.xml"
+      ]
+    },
     "EntityFramework/6.4.4": {
       "sha512": "yj1+/4tci7Panu3jKDHYizxwVm0Jvm7b7m057b5h4u8NUHGCR8WIWirBTw+8EptRffwftIWPBeIRGNKD1ewEMQ==",
       "type": "package",
@@ -2067,6 +2098,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
+      "AutoMapper >= 13.0.1",
       "EntityFramework >= 6.4.4",
       "Microsoft.AspNetCore.OpenApi >= 7.0.12",
       "Microsoft.EntityFrameworkCore >= 7.0.0",
@@ -2075,19 +2107,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\aweso\\.nuget\\packages\\": {}
+    "C:\\Users\\Filip\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
+      "projectUniqueName": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
       "projectName": "AuthMicroservice",
-      "projectPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
-      "packagesPath": "C:\\Users\\aweso\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\obj\\",
+      "projectPath": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
+      "packagesPath": "C:\\Users\\Filip\\.nuget\\packages\\",
+      "outputPath": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\aweso\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Filip\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -2116,6 +2148,10 @@
       "net7.0": {
         "targetAlias": "net7.0",
         "dependencies": {
+          "AutoMapper": {
+            "target": "Package",
+            "version": "[13.0.1, )"
+          },
           "EntityFramework": {
             "target": "Package",
             "version": "[6.4.4, )"

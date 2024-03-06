@@ -1,8 +1,58 @@
-﻿using AuthMicroservice.Services.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using AuthMicroservice.DataAccess.Interfaces;
+using AuthMicroservice.Model;
+using AuthMicroservice.Services.Interfaces;
+using AuthMicroservice.Services.Utility;
+using AutoMapper;
 
 namespace AuthMicroservice.Services.Implentations;
 
 public class UserService : IUserService
+
 {
+    private readonly HashingLogic _hashingLogic;
+    private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
+
+    public UserService(HashingLogic hashingLogic, IUserRepository userRepository, IMapper mapper)
+    {
+        _hashingLogic = hashingLogic;
+        _userRepository = userRepository;
+        _mapper = mapper;
+    }
+
+    public Task CreateUser(UserDto userDto)
+    {
+        byte[] passwordHash, passwordsalt;
+        _hashingLogic.GenerateHash(userDto.password, out passwordHash, out passwordsalt);
+        var user = _mapper.Map<User>(userDto);
+        user.HashPassword = passwordHash;
+        user.SaltPassword = passwordsalt;
+        return _userRepository.CreateUser(user);
+    }
+
+    public User GetUserById(Guid userId)
+    {
+        if (userId == null) throw new ValidationException("Id is invalid");
+        return _userRepository.GetUserById(userId);
+    }
+
+    public User UpdateUser(User user, UserDto userDto)
+    {
+        //TODO Validate UserDto
+        _mapper.Map(userDto, user);
+
+        if (userDto.password != null)
+        {
+            byte[] passwordHash, passwordSalt;
+            _hashingLogic.GenerateHash(userDto.password, out passwordHash, out passwordSalt);
+            user.HashPassword = passwordHash;
+            user.SaltPassword = passwordSalt;
+        }
+
+        return _userRepository.UpdateUser(user);
+    }
     
 }
+
+        

@@ -1,14 +1,25 @@
 using AuthMicroservice.DataAccess.Interfaces;
 using AuthMicroservice.DataAccess.Repositories;
+using AuthMicroservice.Model;
 using AuthMicroservice.Services.Implentations;
 using AuthMicroservice.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using DbContext = AuthMicroservice.DataAccess.DbContext;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var config = new MapperConfiguration(conf =>
+{
+    conf.CreateMap<UserDto, User>();
+    
+});
 
+var mapper = config.CreateMapper();
+
+
+builder.Services.AddSingleton(mapper);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

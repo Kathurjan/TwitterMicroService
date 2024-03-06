@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj": {}
+    "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj": {}
   },
   "projects": {
-    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj": {
+    "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
+        "projectUniqueName": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
         "projectName": "AuthMicroservice",
-        "projectPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
-        "packagesPath": "C:\\Users\\aweso\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\obj\\",
+        "projectPath": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
+        "packagesPath": "C:\\Users\\Filip\\.nuget\\packages\\",
+        "outputPath": "D:\\5th\\TwitterMicroService\\AuthMicroservice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\aweso\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Filip\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -43,6 +43,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "EntityFramework": {
               "target": "Package",
               "version": "[6.4.4, )"

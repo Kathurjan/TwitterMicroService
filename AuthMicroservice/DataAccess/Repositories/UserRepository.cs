@@ -13,33 +13,36 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
     
-    public async Task CreateUserSync(User user)
+    public async Task CreateUser(User user)
     {
-        if (_dbContext.Users.Any(u =>u.Email.Equals(user.Email)))
+        if (_dbContext.UsersTable.Any(u =>u.Email.Equals(user.Email)))
         {
             throw new Exception("User with this email already exists");
         }
-        _dbContext.Users.Add(user);
+        _dbContext.UsersTable.Add(user);
         await  _dbContext.SaveChangesAsync();
     }
 
-    public Task<User> GetUserAsync(int userId)
-    {
-        throw new NotImplementedException();
+    public User GetUserById(Guid userId)
+    { 
+        var userToFind = _dbContext.UsersTable.FirstOrDefault(u => u.Id.Equals(userId));
+        return userToFind;
     }
-
-    public Task UpdateUserAsync(User user)
+    
+    public User UpdateUser(User user)
     {
-        throw new NotImplementedException();
+        _dbContext.UsersTable.Update(user);
+        _dbContext.SaveChanges();
+        return user;
     }
-
-    public async  Task DeleteUserAsync(int userId)
+    
+    public async  Task DeleteUserAsync(Guid userId)
     {
-        var userToDelete = await _dbContext.Users.FindAsync(userId);
+        var userToDelete = await _dbContext.UsersTable.FindAsync(userId);
 
         if (userToDelete !=null)
         {
-            _dbContext.Users.Remove(userToDelete);
+            _dbContext.UsersTable.Remove(userToDelete);
             await _dbContext.SaveChangesAsync();
         }
     }

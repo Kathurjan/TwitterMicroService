@@ -4,9 +4,9 @@ namespace AuthMicroservice.DataAccess.Interfaces;
 
 public interface IUserRepository
 {
-    Task CreateUserSync(User user);
-    Task<User> GetUserAsync(int userId);
-    Task UpdateUserAsync(User user);
-    Task DeleteUserAsync(int userId);
+    Task CreateUser(User user);
+    public User GetUserById(Guid userId);
+    public User UpdateUser(User user);
+    Task DeleteUserAsync(Guid userId);
     Task<User> ValidateUserLoginAsync(string username, string password);
 }
