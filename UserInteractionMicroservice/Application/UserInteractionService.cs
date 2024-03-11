@@ -1,5 +1,5 @@
 
-namespace UserInteractionMicroservice.Interface
+namespace Application.Interfaces
 {
     public interface INotificationService
     {

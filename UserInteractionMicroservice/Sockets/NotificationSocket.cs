@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
-using UserInteractionMicroservice.Entities;
-using UserInteractionMicroservice.Interface;
+using Entities;
+using Application.Interfaces;
 namespace Sockets;
 
 

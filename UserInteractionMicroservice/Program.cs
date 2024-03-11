@@ -1,9 +1,10 @@
 using RabbitMq.RabbitMqIServices;
-using UserInteractionMicroservice.Interface;
-using UserInteractionMicroservice.Services;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Client;
+using Application.Interfaces;
+using Application.Services;
 using Sockets;
+using Infrastructure.Helpers;
+using Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,14 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Register your RabbitMQ receiver
 RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(builder.Services, queueName);
+Infastructure.DependencyResolver.DependencyResolverInfastructure.RegisterInfastructureLayer(builder.Services);
 
+builder.Services.Configure<InfrastructureSettings>(builder.Configuration.GetSection("InfrastructureSettings"));
+
+var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
+Console.WriteLine(_connectionString);
+builder.Services.AddDbContext<DbContextManagement>(options => 
+options.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString)));
 
 
 var app = builder.Build();

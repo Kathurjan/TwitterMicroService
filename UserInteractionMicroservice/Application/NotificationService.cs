@@ -1,5 +1,5 @@
-using UserInteractionMicroservice.Interface;
-namespace UserInteractionMicroservice.Services
+using Application.Interfaces;
+namespace Application.Services
 {
     public class NotificationService : INotificationService
     {
