@@ -1,4 +1,9 @@
 using RabbitMq.RabbitMqIServices;
+using UserInteractionMicroservice.Interface;
+using UserInteractionMicroservice.Services;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Client;
+using Sockets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +16,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Register your RabbitMQ receiver
 RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(builder.Services, queueName);
@@ -18,6 +28,7 @@ RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(bui
 
 
 var app = builder.Build();
+app.MapHub<NotificationSocket>("/SocketNotification");
 
 app.UseCors(options =>
 {
@@ -28,6 +39,8 @@ app.UseCors(options =>
 });
 
 
+
+    
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

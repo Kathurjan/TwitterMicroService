@@ -3,77 +3,75 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.OpenApi.Any;
+using UserInteractionMicroservice.Entities;
+using UserInteractionMicroservice.Interface;
+namespace Sockets;
 
-namespace sockets;
 
-
-public class NotificationSocket : Hub // Simple hub that automatically adds users to groups based on their warehouseId claim
+public class NotificationSocket : Hub
 {
-    
+    // Assuming you have a service to manage notifications, injected via DI
+    private readonly INotificationService _notificationService;
 
-    //put in Interfaces here 
-
-
-
-    public NotificationSocket(
-        //instantiate interfaces here
-        )
+    public NotificationSocket(INotificationService notificationService)
     {
-        //inject intefaces here
+        _notificationService = notificationService;
     }
 
     public override async Task OnConnectedAsync()
     {
-        await base.OnConnectedAsync();
+        var userId = Context.UserIdentifier;
+        if (userId != null)
         {
-            try
+            var following = await _notificationService.GetFollowedEntities(userId); // Get entities the user is following
+            foreach (var entity in following)
             {
-                var user = Context.User ?? throw new ApplicationException("User is null");
-
-                if (user.Identity.IsAuthenticated) // Ensures that the user is authenticated
-                {
-                    var warehouseId = user.FindFirst("warehouseId")?.Value; // Authorizes the user based on their warehouseId claim
-
-                    if (warehouseId != null)
-                    {
-                        await Groups.AddToGroupAsync(Context.ConnectionId, warehouseId + " InventoryManagement");
-                        Console.WriteLine($"Client {Context.ConnectionId} connected to group {warehouseId} in inventory management.");
-                    }
-                }
-
+                await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(entity, "following"));
             }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error in OnConnectedAsync: {e.Message}");
-            }
+            await base.OnConnectedAsync();
         }
+        else
+        {
+            Console.WriteLine("I am connectamamationgs");
+        }
+    }
+
+    // Method to associate a connection with a notification group, called after user sends their identifier
+    public async Task AssociateWithNewNotificationGroup(string userId)
+    {
+        // Retrieve notification info for the user
+        await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(userId, "following"));
 
     }
 
+    
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        try
-        {
-            var user = Context.User ?? throw new ApplicationException("User is null");
-
-            if (user!.Identity!.IsAuthenticated)
-            {
-                var warehouseId = user.FindFirst("warehouseId")?.Value;
-
-                if (warehouseId != null)
-                {
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, warehouseId + " InventoryManagement");
-                    Console.WriteLine($"Client {Context.ConnectionId} disconnected from group {warehouseId} in inventory.");
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error in OnDisconnectedAsync: {e.Message}");
-        }
+        // Similar to OnConnectedAsync, remove the user from their group(s)
+        // This requires storing group names or being able to reconstruct them from user info
 
         await base.OnDisconnectedAsync(exception);
+    }
+
+
+    // Helper method to create a consistent group name
+    private string GenerateGroupName(string userUId, string type)
+    {
+        return $"{userUId}-{type}";
+    }
+
+    // Example method to send a notification message to a group
+    public async Task SendNotification(string userUId, string type, string message)
+    {
+        var groupName = GenerateGroupName(userUId, type);
+        await Clients.Group(groupName).SendAsync("ReceiveNotification", message);
+    }
+    public async Task SendNotification(Notification notification)
+    {
+        var groupName = GenerateGroupName(notification.UserUId, notification.Type);
+        // Convert the notification object to a format suitable for sending, if necessary
+        // For simplicity, we'll assume you can send the object directly
+        await Clients.Group(groupName).SendAsync("ReceiveNotification", notification);
     }
 }
