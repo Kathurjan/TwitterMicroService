@@ -20,32 +20,40 @@ public class NotificationSocket : Hub
 
     public override async Task OnConnectedAsync()
     {
-        var userId = Context.UserIdentifier;
-        if (userId != null)
+
+        var userIdString = Context.UserIdentifier;
+        if (userIdString != null)
         {
-            var following = await _notificationService.GetFollowedEntities(userId); // Get entities the user is following
-            foreach (var entity in following)
+            if (int.TryParse(userIdString, out int userId))
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(entity, "following"));
+                var following = await _notificationService.GetFollowedEntities(userId); // Get entities the user is following
+                foreach (var entity in following)
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(entity, "following"));
+                }
+                await base.OnConnectedAsync();
             }
-            await base.OnConnectedAsync();
+            else
+            {
+                Console.WriteLine("Invalid user identifier format");
+            }
         }
         else
         {
-            Console.WriteLine("I am connectamamationgs");
+            Console.WriteLine("User identifier is null");
         }
     }
 
     // Method to associate a connection with a notification group, called after user sends their identifier
-    public async Task AssociateWithNewNotificationGroup(string userId)
+    public async Task AssociateWithNewNotificationGroup(int userId)
     {
         Console.WriteLine(userId);
         // Retrieve notification info for the user
         await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(userId, "following"));
-        
+
     }
 
-    
+
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
@@ -57,13 +65,13 @@ public class NotificationSocket : Hub
 
 
     // Helper method to create a consistent group name
-    private string GenerateGroupName(string userUId, string type)
+    private string GenerateGroupName(int userId, string type)
     {
-        return $"{userUId}-{type}";
+        return $"{userId}-{type}";
     }
     public async Task SendNotification(Notification notification)
     {
-        var groupName = GenerateGroupName(notification.UserUId, notification.Type);
+        var groupName = GenerateGroupName(notification.UserId, notification.Type);
         // Convert the notification object to a format suitable for sending, if necessary
         // For simplicity, we'll assume you can send the object directly
         await Clients.Group(groupName).SendAsync("ReceiveNotification", notification);

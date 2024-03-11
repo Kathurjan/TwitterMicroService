@@ -9,4 +9,6 @@ public interface INotificationRepo
     Task<List<Notification>> GetNotificationsByUserId(int userId);
     Task<Notification> UpdateNotification(Notification notification);
     Task<bool> DeleteNotification(int id);
+
+    Task CreateTestUser(User user);
 }

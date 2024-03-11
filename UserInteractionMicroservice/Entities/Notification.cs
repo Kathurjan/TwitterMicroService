@@ -1,11 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Entities
 {
     public class Notification
     {
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public required string UserUId { get; set; }
+        public int UserId { get; set; }
         public required string Type { get; set; }
-        public required string Message{ get; set; }
-        public DateTime DateOfDelivery{ get; set; }
+        public required string Message { get; set; }
+        public DateTime DateOfDelivery { get; set; }
+
+        public User User { get; set; }
     }
 }

@@ -13,9 +13,18 @@ public class NotificationRepo : INotificationRepo
         _context = context;
     }
 
-    public Task<Notification> CreateNotification(Notification notification)
+    public async Task<Notification> CreateNotification(Notification notification)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Creating notification");
+        Console.WriteLine(notification.UserId);
+        Console.WriteLine(notification.Type);
+        Console.WriteLine(notification.Message);
+
+        _context.Notifications.Add(notification);
+
+        await _context.SaveChangesAsync();
+
+        return notification;
     }
 
     Task<Notification> INotificationRepo.GetNotificationById(int id)
@@ -36,5 +45,12 @@ public class NotificationRepo : INotificationRepo
     public Task<bool> DeleteNotification(int id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task CreateTestUser(User user)
+    {
+        _context.Users.Add(user);
+
+        await _context.SaveChangesAsync();
     }
 }

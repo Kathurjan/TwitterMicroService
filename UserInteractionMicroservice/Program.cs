@@ -30,9 +30,8 @@ Infastructure.DependencyResolver.DependencyResolverInfastructure.RegisterInfastr
 builder.Services.Configure<InfrastructureSettings>(builder.Configuration.GetSection("InfrastructureSettings"));
 
 var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
-Console.WriteLine(_connectionString);
-builder.Services.AddDbContext<DbContextManagement>(options => 
-options.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString)));
+builder.Services.AddDbContext<DbContextManagement>(options =>
+    options.UseSqlite(_connectionString));
 
 
 var app = builder.Build();
