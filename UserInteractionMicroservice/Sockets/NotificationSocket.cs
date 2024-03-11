@@ -39,9 +39,10 @@ public class NotificationSocket : Hub
     // Method to associate a connection with a notification group, called after user sends their identifier
     public async Task AssociateWithNewNotificationGroup(string userId)
     {
+        Console.WriteLine(userId);
         // Retrieve notification info for the user
         await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(userId, "following"));
-
+        
     }
 
     
@@ -59,13 +60,6 @@ public class NotificationSocket : Hub
     private string GenerateGroupName(string userUId, string type)
     {
         return $"{userUId}-{type}";
-    }
-
-    // Example method to send a notification message to a group
-    public async Task SendNotification(string userUId, string type, string message)
-    {
-        var groupName = GenerateGroupName(userUId, type);
-        await Clients.Group(groupName).SendAsync("ReceiveNotification", message);
     }
     public async Task SendNotification(Notification notification)
     {

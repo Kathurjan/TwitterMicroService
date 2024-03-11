@@ -28,7 +28,7 @@ RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(bui
 
 
 var app = builder.Build();
-app.MapHub<NotificationSocket>("/SocketNotification");
+
 
 app.UseCors(options =>
 {
@@ -56,5 +56,5 @@ using (var scope = app.Services.CreateScope())
     // Start receiving messages
     rabbitMqReceiver.Receive();
 }
-
+app.MapHub<NotificationSocket>("/SocketNotification");
 app.Run();
