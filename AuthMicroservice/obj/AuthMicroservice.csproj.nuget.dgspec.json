@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj": {}
+    "C:\\Users\\marcu\\IdeaProjects\\OpenAPITest\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj": {}
   },
   "projects": {
-    "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj": {
+    "C:\\Users\\marcu\\IdeaProjects\\OpenAPITest\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
+        "projectUniqueName": "C:\\Users\\marcu\\IdeaProjects\\OpenAPITest\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
         "projectName": "AuthMicroservice",
-        "projectPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\AuthMicroservice.csproj",
-        "packagesPath": "C:\\Users\\aweso\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\aweso\\OneDrive\\Skrivebord\\Projects\\Bachelor\\System_intergration\\week 8\\AuthMicroservice\\obj\\",
+        "projectPath": "C:\\Users\\marcu\\IdeaProjects\\OpenAPITest\\TwitterMicroService\\AuthMicroservice\\AuthMicroservice.csproj",
+        "packagesPath": "C:\\Users\\marcu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\marcu\\IdeaProjects\\OpenAPITest\\TwitterMicroService\\AuthMicroservice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\aweso\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\marcu\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.404\\RuntimeIdentifierGraph.json"
         }
       }
     }
