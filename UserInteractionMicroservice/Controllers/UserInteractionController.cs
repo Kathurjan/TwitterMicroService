@@ -23,7 +23,7 @@ public class UserInteractionController : ControllerBase
     public void ConsumeUserInteraction(TestInteraction testInteraction)
     {
         Console.WriteLine("UserInteractionController: " + testInteraction.Message);
-        _rabbitMqSender.Send(testInteraction.Message);
+        _rabbitMqSender.Send(testInteraction);
     }
 
     [HttpPost("NotificationTest")]

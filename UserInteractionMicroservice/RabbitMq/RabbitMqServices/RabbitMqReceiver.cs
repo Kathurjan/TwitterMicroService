@@ -1,7 +1,12 @@
 using System.Text;
+using Application.Interfaces;
+using DTO;
 using RabbitMq.RabbitMqIServices;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Newtonsoft.Json;
+using RabbitMq.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace RabbitMq.RabbitMqServices;
 
@@ -11,15 +16,20 @@ public class RabbitMqReceiver : IRabbitMqReceiver
     private readonly IModel _channel;
     private readonly string _queueName;
 
-    public RabbitMqReceiver(string queueName)
+    private readonly INotificationService _notificationService;
+
+    public RabbitMqReceiver(INotificationService notificationService,  IOptions<RabbitMqSettings> rabbitMqSettings)
     {
-        _queueName = queueName;
+        
+        _queueName = rabbitMqSettings.Value.Queuename;
+        _notificationService = notificationService;
 
         var factory = new ConnectionFactory { HostName = "localhost" };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
         _channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
     }
+   
 
     public void Receive()
     {
@@ -28,7 +38,10 @@ public class RabbitMqReceiver : IRabbitMqReceiver
         {
             var body = ea.Body;
             var message = Encoding.UTF8.GetString(body.ToArray());
-            Console.WriteLine($" [x] Received {message}");
+            var DeserializedJson = JsonConvert.DeserializeObject<NotificationDto>(message);
+            Console.WriteLine(" [x] Received {0}", DeserializedJson);
+            Console.WriteLine(DeserializedJson.Message);
+            
         };
         _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);
     }

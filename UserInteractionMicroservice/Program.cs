@@ -4,14 +4,10 @@ using Application.Services;
 using Sockets;
 using Infrastructure.Helpers;
 using Infrastructure.Contexts;
+using RabbitMq.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-// Add services to the container.
-var queueName = "UserInteractionQueue"; 
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,10 +20,11 @@ builder.Services.AddSignalR(options =>
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Register your RabbitMQ receiver
-RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(builder.Services, queueName);
+RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(builder.Services);
 Infastructure.DependencyResolver.DependencyResolverInfastructure.RegisterInfastructureLayer(builder.Services);
 
 builder.Services.Configure<InfrastructureSettings>(builder.Configuration.GetSection("InfrastructureSettings"));
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMqSettings"));
 
 var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
 builder.Services.AddDbContext<DbContextManagement>(options =>
