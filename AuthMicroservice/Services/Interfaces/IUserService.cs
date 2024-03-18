@@ -4,11 +4,10 @@ namespace AuthMicroservice.Services.Interfaces;
 
 public interface IUserService
 {
-    Task CreateUser(UserDto userDto);
-    public User GetUserById(Guid userId);
+    public User CreateUser(UserDto userDto);
+    public User GetUserById(int userId);
     public User UpdateUser(User user, UserDto userDto);
-    public User DeleteUser (Guid userId);
-    public User GetUserByEmail(string currentUserEmail);
-    
-    
+    public User DeleteUser (int userId);
+    public User GetUserByEmail(string currentUserEmail); 
+    void RebuildDB();
 }

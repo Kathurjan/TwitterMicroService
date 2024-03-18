@@ -21,7 +21,7 @@ public class UserService : IUserService
         _mapper = mapper;
     }
 
-    public Task CreateUser(UserDto userDto)
+    public User CreateUser(UserDto userDto)
     {
         byte[] passwordHash, passwordsalt;
         _hashingLogic.GenerateHash(userDto.password, out passwordHash, out passwordsalt);
@@ -31,7 +31,7 @@ public class UserService : IUserService
         return _userRepository.CreateUser(user);
     }
 
-    public User GetUserById(Guid userId)
+    public User GetUserById(int userId)
     {
         if (userId == null) throw new ValidationException("Id is invalid");
         return _userRepository.GetUserById(userId);
@@ -53,7 +53,7 @@ public class UserService : IUserService
         return _userRepository.UpdateUser(user);
     }
 
-    public User DeleteUser(Guid userId)
+    public User DeleteUser(int userId)
     {
         if (userId == null)
         {
@@ -69,7 +69,10 @@ public class UserService : IUserService
         return _userRepository.GetUserByEmail(userEmail);
     }
 
-
+    public void RebuildDB()
+    {
+        _userRepository.RebuildDB();
+    }
 }
 
         

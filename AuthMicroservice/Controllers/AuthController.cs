@@ -18,32 +18,29 @@ public class AuthController : ControllerBase
         _authentication = authentication;
         
     }
+    
 
-    [HttpPost]
-    [Route("register")]
-    public ActionResult<User> CreateUser(UserDto userDto)
+    [HttpPost("Register")]
+    public  ActionResult<User> CreateUser([FromBody] UserDto userDto)
     {
         try
         {
-            var result = _userService.CreateUser(userDto);
-            return Created("User/" + result.Id, result);
-        }
-        catch (ValidationException e)
-        {
-            return BadRequest(e.Message);
+            return  _userService.CreateUser(userDto);
         }
         catch (Exception e)
         {
-            return StatusCode(500, e.Message);
+            Console.WriteLine(e);
+            throw new Exception("controller went worng" +e);
         }
+       
     }
-    
     [HttpGet("{userId}")]
-    public ActionResult<User> GetUserById(Guid userId)
+    public ActionResult<User> GetUserById(int userId)
     {
         try
         {
             return Ok(_userService.GetUserById(userId));
+            
         }
         catch (KeyNotFoundException e)
         {
@@ -57,7 +54,7 @@ public class AuthController : ControllerBase
     
     [HttpPut]
     [Route("update")]
-    public ActionResult<User> UpdateUser(Guid userId, [FromBody] UserDto userDto, string password)
+    public ActionResult<User> UpdateUser(int userId, [FromBody] UserDto userDto, string password)
     {
                
         var actualUser = _userService.GetUserById(userId);
@@ -87,7 +84,7 @@ public class AuthController : ControllerBase
     
     [HttpDelete]
     [Route("delete")]
-    public ActionResult<User> DeleteUserById(Guid userId)
+    public ActionResult<User> DeleteUserById(int userId)
     {
         try
         {
@@ -131,6 +128,31 @@ public class AuthController : ControllerBase
         {
             return StatusCode(500, e.Message);
         }
+    }
+
+
+    
+    
+    [HttpPost]
+    [Route("TestUsers")]
+    public void AddTestUsers()
+    {
+        UserDto Dto = new UserDto
+        {
+            Username = "test",
+            Email = "test",
+            password = "test"
+        };
+        _userService.CreateUser(Dto);
+
+
+    }
+    
+    [HttpGet]
+    [Route("RebuildDB")]
+    public void RebuildDB()
+    {
+        _userService.RebuildDB();
     }
     
 }

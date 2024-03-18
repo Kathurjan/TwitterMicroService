@@ -13,17 +13,18 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
     
-    public async Task CreateUser(User user)
+    public  User CreateUser(User user)
     {
         if (_dbContext.UsersTable.Any(u =>u.Email.Equals(user.Email)))
         {
             throw new Exception("User with this email already exists");
         }
         _dbContext.UsersTable.Add(user);
-        await  _dbContext.SaveChangesAsync();
+        _dbContext.SaveChangesAsync();
+        return user;
     }
 
-    public User GetUserById(Guid userId)
+    public User GetUserById(int userId)
     { 
         var userToFind = _dbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
         return userToFind;
@@ -36,7 +37,7 @@ public class UserRepository : IUserRepository
         return user;
     }
     
-    public User DeleteUser(Guid userId)
+    public User DeleteUser(int userId)
     {
         var userToDelete =  _dbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
 
@@ -57,4 +58,10 @@ public class UserRepository : IUserRepository
         return _dbContext.UsersTable.FirstOrDefault(u => u.Email == userEmail)!;;
     }
 
+    
+    public void RebuildDB()
+    {
+        _dbContext.Database.EnsureDeleted();
+        _dbContext.Database.EnsureCreated();
+    }
 }
