@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FeedHandlingMicroservice")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1d352b5336468a0ab3e1506c30c557f3fbbd970")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a7b24c923a0d896da5cd5845713ba1c2c9c3a9f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("FeedHandlingMicroservice")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FeedHandlingMicroservice")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
