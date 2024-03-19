@@ -5,9 +5,8 @@ namespace AuthMicroservice.DataAccess;
 public class DbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     public DbContext(DbContextOptions<DbContext> options)
-        : base(options)
-    {
+        : base(options) {
     }
-
-    public DbSet<User> Users { get; set; }
+    
+    public DbSet<User> UsersTable { get; set; }
 }
