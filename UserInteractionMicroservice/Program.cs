@@ -6,8 +6,14 @@ using Infrastructure.Helpers;
 using Infrastructure.Contexts;
 using RabbitMq.Helpers;
 using Microsoft.EntityFrameworkCore;
+using DbContext = Infrastructure.Contexts.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
+builder.Services.AddDbContext<DbContext>(options =>
+    options.UseSqlServer(_connectionStringUseSqlServer));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -29,12 +35,6 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("R
 //var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
 //builder.Services.AddDbContext<DbContextManagement>(options =>
 //   options.UseSqlite(_connectionString));
-
-var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
-builder.Services.AddDbContext<DbContextManagement>(options =>
-    options.UseSqlServer(_connectionStringUseSqlServer));
-
-Console.WriteLine("UserInteractionMicroservice: ConnectionString: " + _connectionStringUseSqlServer);
 
 
 

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Contexts;
 
-public class DbContextManagement : Microsoft.EntityFrameworkCore.DbContext
+public class DbContext : Microsoft.EntityFrameworkCore.DbContext
 {
-    public DbContextManagement(DbContextOptions<DbContextManagement> options)
+    public DbContext(DbContextOptions<DbContext> options)
         : base(options) {
         
     }

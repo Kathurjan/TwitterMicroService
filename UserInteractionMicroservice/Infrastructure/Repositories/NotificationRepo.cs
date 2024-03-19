@@ -1,8 +1,7 @@
 using Entities;
 using Infrastructure.IRepositories;
-using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
-
+using DbContext = Infrastructure.Contexts.DbContext;
 
 
 namespace Infrastructure.Repositories;
@@ -10,10 +9,10 @@ namespace Infrastructure.Repositories;
 
 public class NotificationRepo : INotificationRepo
 {
-    private readonly DbContextManagement _context;
-    public NotificationRepo(DbContextManagement context)
+    private readonly DbContext _dbContext;
+    public NotificationRepo(DbContext dbContext)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _dbContext = dbContext;
 
     }
 
@@ -24,9 +23,9 @@ public class NotificationRepo : INotificationRepo
         Console.WriteLine(notification.Type);
         Console.WriteLine(notification.Message);
 
-        _context.Notifications.Add(notification);
+        _dbContext.Notifications.Add(notification);
 
-        _context.SaveChangesAsync();
+        _dbContext.SaveChangesAsync();
 
         return notification;
     }
@@ -53,18 +52,18 @@ public class NotificationRepo : INotificationRepo
 
     public async Task CreateTestUser(User user)
     {
-        _context.Users.Add(user);
+        _dbContext.Users.Add(user);
 
-        await _context.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     public void RebuildDB()
     {
         try
         {
-            string connectionString = _context.Database.GetDbConnection().ConnectionString;
+            string connectionString = _dbContext.Database.GetDbConnection().ConnectionString;
             Console.WriteLine($"Connection String: {connectionString}");
-            _context.Database.EnsureCreatedAsync();
+            _dbContext.Database.EnsureCreatedAsync();
         }
         catch (Exception e)
         {
