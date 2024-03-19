@@ -27,15 +27,21 @@ public class UserInteractionController : ControllerBase
     }
 
     [HttpPost("NotificationTest")]
-    public async void CreateNotification(NotificationDto notificationDto)
+    public void CreateNotification(NotificationDto notificationDto)
     {
-        await _notificationService.CreateNotification(notificationDto);
+        _notificationService.CreateNotification(notificationDto);
     }
 
     [HttpPost("CreateTestUser")]
     public async void CreateTestUser(int userId)
     {
         await _notificationService.CreateTestUser(userId);
+    }
+
+    [HttpPost("RebuildDB")]
+    public void RebuildDB()
+    {
+       _notificationService.RebuildDB();
     }
    
 

@@ -1,6 +1,9 @@
 using Entities;
 using Infrastructure.IRepositories;
 using Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
+
+
 
 namespace Infrastructure.Repositories;
 
@@ -10,10 +13,11 @@ public class NotificationRepo : INotificationRepo
     private readonly DbContextManagement _context;
     public NotificationRepo(DbContextManagement context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+
     }
 
-    public async Task<Notification> CreateNotification(Notification notification)
+    public Notification CreateNotification(Notification notification)
     {
         Console.WriteLine("Creating notification");
         Console.WriteLine(notification.UserId);
@@ -22,7 +26,7 @@ public class NotificationRepo : INotificationRepo
 
         _context.Notifications.Add(notification);
 
-        await _context.SaveChangesAsync();
+        _context.SaveChangesAsync();
 
         return notification;
     }
@@ -52,5 +56,20 @@ public class NotificationRepo : INotificationRepo
         _context.Users.Add(user);
 
         await _context.SaveChangesAsync();
+    }
+
+    public void RebuildDB()
+    {
+        try
+        {
+            string connectionString = _context.Database.GetDbConnection().ConnectionString;
+            Console.WriteLine($"Connection String: {connectionString}");
+            _context.Database.EnsureCreatedAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            
+        }
     }
 }

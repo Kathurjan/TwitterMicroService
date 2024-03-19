@@ -8,8 +8,10 @@ namespace Application.Interfaces
     {
         public Task<List<int>> GetFollowedEntities(int userId);
          public Task GetNotificationsByUserId(int userId);
-         public Task<Notification> CreateNotification(NotificationDto notificationDto);
+         public Notification CreateNotification(NotificationDto notificationDto);
          
          public Task CreateTestUser(int userId);
+
+         public void RebuildDB();
     }
 }

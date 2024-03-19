@@ -16,7 +16,7 @@ namespace Application.Services
         }
 
 
-        public async Task<Notification> CreateNotification(NotificationDto notificationDto)
+        public Notification CreateNotification(NotificationDto notificationDto)
         {
             Notification notification = new Notification()
             {
@@ -26,7 +26,7 @@ namespace Application.Services
                 DateOfDelivery = DateTime.Now
             };
 
-            await _notificationRepo.CreateNotification(notification);
+            _notificationRepo.CreateNotification(notification);
 
             return notification;
         }
@@ -57,5 +57,12 @@ namespace Application.Services
 
             await _notificationRepo.CreateTestUser(user);
         }
+
+        public void RebuildDB()
+        {
+           _notificationRepo.RebuildDB();
+        }
     }
+
+
 }

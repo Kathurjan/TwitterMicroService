@@ -26,9 +26,16 @@ Infastructure.DependencyResolver.DependencyResolverInfastructure.RegisterInfastr
 builder.Services.Configure<InfrastructureSettings>(builder.Configuration.GetSection("InfrastructureSettings"));
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMqSettings"));
 
-var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
+//var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
+//builder.Services.AddDbContext<DbContextManagement>(options =>
+//   options.UseSqlite(_connectionString));
+
+var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
 builder.Services.AddDbContext<DbContextManagement>(options =>
-    options.UseSqlite(_connectionString));
+    options.UseSqlServer(_connectionStringUseSqlServer));
+
+Console.WriteLine("UserInteractionMicroservice: ConnectionString: " + _connectionStringUseSqlServer);
+
 
 
 var app = builder.Build();
