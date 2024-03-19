@@ -33,9 +33,11 @@ public class UserInteractionController : ControllerBase
     }
 
     [HttpPost("CreateTestUser")]
-    public async void CreateTestUser(int userId)
+    public async Task<ActionResult<string>> CreateTestUser(int userId)
     {
-        await _notificationService.CreateTestUser(userId);
+        var result = await _notificationService.CreateTestUser(userId);
+
+        return Ok(result);
     }
 
     [HttpPost("RebuildDB")]

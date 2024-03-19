@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Entities;
 using Infrastructure.IRepositories;
 using DTO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Services
 {
@@ -48,14 +49,16 @@ namespace Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task CreateTestUser(int userId)
+        public async Task<ActionResult<string>> CreateTestUser(int userId)
         {
             var user = new User()
             {
                 Id = userId
             };
 
-            await _notificationRepo.CreateTestUser(user);
+            var result = await _notificationRepo.CreateTestUser(user);
+
+            return result;
         }
 
         public void RebuildDB()

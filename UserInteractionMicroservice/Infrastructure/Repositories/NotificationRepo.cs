@@ -1,5 +1,6 @@
 using Entities;
 using Infrastructure.IRepositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DbContext = Infrastructure.Contexts.DbContext;
 
@@ -50,11 +51,13 @@ public class NotificationRepo : INotificationRepo
         throw new NotImplementedException();
     }
 
-    public async Task CreateTestUser(User user)
+    public async Task<ActionResult<string>> CreateTestUser(User user)
     {
         _dbContext.Users.Add(user);
 
         await _dbContext.SaveChangesAsync();
+
+        return "User created";
     }
 
     public void RebuildDB()

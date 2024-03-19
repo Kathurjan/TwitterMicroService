@@ -1,4 +1,5 @@
 using Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Infrastructure.IRepositories;
 
@@ -10,7 +11,7 @@ public interface INotificationRepo
     Task<Notification> UpdateNotification(Notification notification);
     Task<bool> DeleteNotification(int id);
 
-    Task CreateTestUser(User user);
+    Task<ActionResult<string>> CreateTestUser(User user);
 
     void RebuildDB();
 }
