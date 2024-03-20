@@ -3,9 +3,10 @@ using AuthMicroservice.DataAccess.Repositories;
 using AuthMicroservice.Model;
 using AuthMicroservice.Services.Implentations;
 using AuthMicroservice.Services.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using DbContext = AuthMicroservice.DataAccess.DbContext;
-using AutoMapper;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
