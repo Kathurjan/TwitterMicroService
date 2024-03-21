@@ -1,18 +1,16 @@
 using Entities;
-using Sockets;
+using Infrastructure.Contexts;
 using Infrastructure.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DbContext = Infrastructure.Contexts.DbContext;
-
 
 namespace Infrastructure.Repositories;
 
 
 public class NotificationRepo : INotificationRepo
 {
-    private readonly DbContext _dbContext;
-    public NotificationRepo(DbContext dbContext)
+    private readonly UserInteractionDbContext _dbContext;
+    public NotificationRepo(UserInteractionDbContext dbContext)
     {
         _dbContext = dbContext;
 

@@ -33,9 +33,9 @@ public class UserInteractionController : ControllerBase
     }
 
     [HttpPost("CreateTestUser")]
-    public async Task<ActionResult<string>> CreateTestUser(string userId)
+    public async Task<ActionResult<string>> CreateTestUser(UserCreationDTO userCreationDTO)
     {
-        var result = await _notificationService.CreateTestUser(userId);
+        var result = await _notificationService.CreateTestUser(userCreationDTO.UserId);
 
         return Ok(result);
     }

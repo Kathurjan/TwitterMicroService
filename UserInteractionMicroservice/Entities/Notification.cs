@@ -14,5 +14,7 @@ namespace Entities
         public required string Message { get; set; }
         public DateTime DateOfDelivery { get; set; }
         public User User { get; set; }
+
+        public ICollection<NotificationUserRelation> NotificationUserRelations { get; set; }
     }
 }

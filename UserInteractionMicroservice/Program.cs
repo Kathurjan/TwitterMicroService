@@ -6,13 +6,12 @@ using Infrastructure.Helpers;
 using Infrastructure.Contexts;
 using RabbitMq.Helpers;
 using Microsoft.EntityFrameworkCore;
-using DbContext = Infrastructure.Contexts.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
-builder.Services.AddDbContext<DbContext>(options =>
+builder.Services.AddDbContext<UserInteractionDbContext>(options =>
     options.UseSqlServer(_connectionStringUseSqlServer));
 
 builder.Services.AddControllers();
@@ -27,7 +26,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Register your RabbitMQ receiver
 RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(builder.Services);
-Infastructure.DependencyResolver.DependencyResolverInfastructure.RegisterInfastructureLayer(builder.Services);
+Infastructure.DependencyResolver.DependencyResolverInfrastruce.RegistInfrastructure(builder.Services);
 
 builder.Services.Configure<InfrastructureSettings>(builder.Configuration.GetSection("InfrastructureSettings"));
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMqSettings"));

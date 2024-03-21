@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Contexts;
 
-public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+public class UserInteractionDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
-    public DbContext(DbContextOptions<DbContext> options)
-        : base(options) {
-        
+    public UserInteractionDbContext(DbContextOptions<UserInteractionDbContext> options)
+        : base(options)
+    {
+
     }
 
     public DbSet<Notification> Notifications { get; set; }
@@ -18,18 +19,22 @@ public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.User)
-            .WithMany(u => u.Notifications)  // Assuming there's a navigation property in the User class representing notifications
-            .HasForeignKey(n => n.UserId);
+            .WithMany(u => u.Notifications)
+            .HasForeignKey(n => n.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<NotificationUserRelation>()
-            .HasOne<User>()
-            .WithMany()
-            .HasForeignKey(n => n.UserId);
+            .HasOne(nur => nur.Notification)
+            .WithMany(n => n.NotificationUserRelations)
+            .HasForeignKey(nur => nur.NotificationId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<NotificationUserRelation>()
-            .HasOne<Notification>()
-            .WithMany()
-            .HasForeignKey(n => n.NotificationId);
+            .HasOne(nur => nur.User)
+            .WithMany(u => u.NotificationUserRelations)
+            .HasForeignKey(nur => nur.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
 
     }
 

@@ -4,9 +4,9 @@ using Infrastructure.Repositories;
 
 namespace Infastructure.DependencyResolver
 {
-    public static class DependencyResolverInfastructure
+    public static class DependencyResolverInfrastruce
     {
-        public static void RegisterInfastructureLayer(this IServiceCollection serviceCollection)
+        public static void RegistInfrastructure(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<INotificationRepo, NotificationRepo>();
         }
