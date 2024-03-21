@@ -6,45 +6,45 @@ namespace AuthMicroservice.DataAccess.Repositories;
 public class UserRepository : IUserRepository
 {
 
-    private readonly DbContext _dbContext;
+    private readonly AuthDbContext _authDbContext;
 
-    public UserRepository(DbContext dbContext)
+    public UserRepository(AuthDbContext authDbContext)
     {
-        _dbContext = dbContext;
+        _authDbContext = authDbContext;
     }
     
     public  User CreateUser(User user)
     {
-        if (_dbContext.UsersTable.Any(u =>u.Email.Equals(user.Email)))
+        if (_authDbContext.UsersTable.Any(u =>u.Email.Equals(user.Email)))
         {
             throw new Exception("User with this email already exists");
         }
-        _dbContext.UsersTable.Add(user);
-        _dbContext.SaveChangesAsync();
+        _authDbContext.UsersTable.Add(user);
+        _authDbContext.SaveChangesAsync();
         return user;
     }
 
     public User GetUserById(int userId)
     { 
-        var userToFind = _dbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
+        var userToFind = _authDbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
         return userToFind;
     }
     
     public User UpdateUser(User user)
     {
-        _dbContext.UsersTable.Update(user);
-        _dbContext.SaveChanges();
+        _authDbContext.UsersTable.Update(user);
+        _authDbContext.SaveChanges();
         return user;
     }
     
     public User DeleteUser(int userId)
     {
-        var userToDelete =  _dbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
+        var userToDelete =  _authDbContext.UsersTable.FirstOrDefault(u => u.Id == (userId));
 
         if (userToDelete !=null)
         {
-             _dbContext.UsersTable.Remove(userToDelete);
-             _dbContext.SaveChangesAsync();
+             _authDbContext.UsersTable.Remove(userToDelete);
+             _authDbContext.SaveChangesAsync();
         }
         // returning deleted user for now. may need to change //TODO
         return userToDelete;
@@ -55,13 +55,13 @@ public class UserRepository : IUserRepository
     public User GetUserByEmail(string userEmail)
     {
         
-        return _dbContext.UsersTable.FirstOrDefault(u => u.Email == userEmail)!;;
+        return _authDbContext.UsersTable.FirstOrDefault(u => u.Email == userEmail)!;;
     }
 
     
     public void RebuildDB()
     {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Database.EnsureCreated();
+        _authDbContext.Database.EnsureDeleted();
+        _authDbContext.Database.EnsureCreated();
     }
 }

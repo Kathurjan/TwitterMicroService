@@ -1,10 +1,10 @@
+using AuthMicroservice.DataAccess;
 using AuthMicroservice.DataAccess.Interfaces;
 using AuthMicroservice.DataAccess.Repositories;
 using AuthMicroservice.Model;
 using AuthMicroservice.Services.Implentations;
 using AuthMicroservice.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using DbContext = AuthMicroservice.DataAccess.DbContext;
 using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +17,7 @@ var config = new MapperConfiguration(conf =>
 });
 
 var mapper = config.CreateMapper();
-builder.Services.AddDbContext<DbContext>(options =>
+builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDatabase")));
 
 builder.Services.AddSingleton(mapper);
@@ -30,7 +30,7 @@ builder.Services.AddScoped<AuthMicroservice.Services.Utility.Authentication>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddDbContext<DbContext>(options =>
+builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseInMemoryDatabase("AuthDatabase"));
 var app = builder.Build();
 

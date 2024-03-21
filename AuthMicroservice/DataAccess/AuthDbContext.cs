@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthMicroservice.DataAccess;
-public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+public class AuthDbContext : DbContext
 {
-    public DbContext(DbContextOptions<DbContext> options)
+    public AuthDbContext(DbContextOptions<AuthDbContext> options)
         : base(options) {
     }
     
