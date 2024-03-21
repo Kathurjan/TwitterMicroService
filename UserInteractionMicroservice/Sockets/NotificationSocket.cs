@@ -11,11 +11,15 @@ namespace Sockets;
 
 public class NotificationSocket : Hub
 {
-    // Assuming you have a service to manage notifications, injected via DI
+    private readonly IHubContext<NotificationSocket> _notificationSocket;
     private readonly INotificationService _notificationService;
 
-    public NotificationSocket(INotificationService notificationService)
+    public NotificationSocket(
+        INotificationService notificationService, 
+        IHubContext<NotificationSocket> notificationSocket
+    )
     {
+        _notificationSocket = notificationSocket; 
         _notificationService = notificationService;
     }
 
@@ -63,9 +67,10 @@ public class NotificationSocket : Hub
     {
         return $"{userId}-{type}";
     }
-    public async Task SendNotification(NotificationDto notification)
+    public async Task SendNotification(Notification notification)
     {
         var groupName = GenerateGroupName(notification.UserId, notification.Type);
-        await Clients.Group(groupName).SendAsync("ReceiveNotification", notification);
+        /* await Clients.Group(groupName).SendAsync("ReceiveNotification", notification); */
+        Console.WriteLine(notification.Message+ " Sent to notification group: "+ groupName);
     }
 }

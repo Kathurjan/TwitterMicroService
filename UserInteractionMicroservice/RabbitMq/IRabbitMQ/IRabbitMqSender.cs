@@ -1,5 +1,7 @@
+using Entities;
+
 namespace RabbitMq.RabbitMqIServices;
 public interface IRabbitMqSender
 {
-    void Send(TestInteraction testInteraction);
+    public void SendNotification(Notification notification);
 }

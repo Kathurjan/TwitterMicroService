@@ -6,6 +6,7 @@ using Infrastructure.Helpers;
 using Infrastructure.Contexts;
 using RabbitMq.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 

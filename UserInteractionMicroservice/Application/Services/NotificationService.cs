@@ -4,13 +4,14 @@ using Infrastructure.IRepositories;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
+using Sockets;
 
 namespace Application.Services
 {
     public class NotificationService : INotificationService
     {   
 
-
+        private NotificationSocket _notificationSocket;
         private readonly INotificationRepo _notificationRepo;
         public NotificationService(INotificationRepo notificationRepo)
         {
@@ -28,7 +29,8 @@ namespace Application.Services
                 DateOfDelivery = DateTime.Now
             };
             
-            await  _notificationRepo.CreateNotification(notification);
+            await _notificationRepo.CreateNotification(notification);
+            await _notificationSocket.SendNotification(notification);
             
         }
 
