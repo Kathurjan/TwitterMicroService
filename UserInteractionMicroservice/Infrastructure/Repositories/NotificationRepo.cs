@@ -1,4 +1,5 @@
 using Entities;
+using Sockets;
 using Infrastructure.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ public class NotificationRepo : INotificationRepo
 
     }
 
-    public Notification CreateNotification(Notification notification)
+    public async Task CreateNotification(Notification notification)
     {
         Console.WriteLine("Creating notification");
         Console.WriteLine(notification.UserId);
@@ -26,9 +27,8 @@ public class NotificationRepo : INotificationRepo
 
         _dbContext.Notifications.Add(notification);
 
-        _dbContext.SaveChangesAsync();
-
-        return notification;
+        await _dbContext.SaveChangesAsync();
+        
     }
 
     Task<Notification> INotificationRepo.GetNotificationById(int id)

@@ -9,11 +9,10 @@ namespace Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public required string Type { get; set; }
         public required string Message { get; set; }
         public DateTime DateOfDelivery { get; set; }
-
         public User User { get; set; }
     }
 }

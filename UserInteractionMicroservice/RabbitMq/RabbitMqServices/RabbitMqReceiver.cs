@@ -39,8 +39,9 @@ public class RabbitMqReceiver : IRabbitMqReceiver
             var body = ea.Body;
             var message = Encoding.UTF8.GetString(body.ToArray());
             var DeserializedJson = JsonConvert.DeserializeObject<NotificationDto>(message);
+            
             Console.WriteLine(" [x] Received {0}", DeserializedJson);
-            Console.WriteLine(DeserializedJson.Message);
+            _notificationService.CreateNotification(DeserializedJson);
             
         };
         _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);

@@ -7,12 +7,12 @@ namespace Application.Interfaces
 {
     public interface INotificationService
     {
-        public Task<List<int>> GetFollowedEntities(int userId);
-         public Task GetNotificationsByUserId(int userId);
-         public Notification CreateNotification(NotificationDto notificationDto);
+        public Task<List<string>> GetFollowedEntities(string userId);
+        public Task GetNotificationsByUserId(string userId);
+        public Task CreateNotification(NotificationDto notificationDto);
          
-         public Task<ActionResult<string>> CreateTestUser(int userId);
+        public Task<ActionResult<string>> CreateTestUser(string userId);
 
-         public void RebuildDB();
+        public void RebuildDB();
     }
 }
