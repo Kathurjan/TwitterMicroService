@@ -38,22 +38,20 @@ public class PostRepo : IPostRepo
     public Task<List<Post>> GetAllPostByUserId(int userId)
     {
 
-        return _dbContext.PostsTable.Where(p => p.Id == userId).ToListAsync();
+        return _dbContext.PostsTable.Where(p => p.UserId == userId).ToListAsync();
     }
 
     public async Task<Post> DeletePost(int id)
     {
-        var postToDelete = await _dbContext.PostsTable.FindAsync(id);
+        var postToDelete = GetPostById(id);
         if (postToDelete != null)
         {
-            _dbContext.PostsTable.Remove(postToDelete);
+            _dbContext.PostsTable.Remove(await postToDelete);
             await _dbContext.SaveChangesAsync();
-            return postToDelete;
+            return await postToDelete;
         }
-        else
-        {
-            throw new ArgumentException("Post not found", nameof(id));
-        }
+
+        throw new ArgumentException("Post not found", nameof(id));
     }
 
     public async Task<Post> UpdatePost(Post post)

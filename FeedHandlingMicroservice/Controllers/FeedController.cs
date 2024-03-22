@@ -15,7 +15,7 @@ public class FeedController : ControllerBase
 
 
     [HttpPost("CreatePost")]
-    public Task<IActionResult> CreatePost(string content)
+    public async Task<IActionResult> CreatePost(string content)
     {
         try
         {
@@ -33,8 +33,8 @@ public class FeedController : ControllerBase
                 Content = content
             };
             
-             _postService.CreatePost(postDto);
-            return Task.FromResult<IActionResult>(Ok("Post created successfully."));
+             await _postService.CreatePost(postDto);
+            return Ok("Post created successfully.");
         }
         catch (Exception e)
         {
