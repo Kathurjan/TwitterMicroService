@@ -6,6 +6,11 @@ namespace FeedHandlingMicroservice.DataAccess;
 public interface IPostRepo
 {
     void CreatePost(Post post);
+    Task<Post> GetPostById(int id);
+    Task<List<Post>> GetAllPost();
+    Task<List<Post>> GetAllPostByUserId(int userId);
+    void DeletePost(int id);
+    Task<Post> UpdatePost(Post post);
     
     void RebuildDB();
 }

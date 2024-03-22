@@ -7,7 +7,7 @@ public class PostDbContext : Microsoft.EntityFrameworkCore.DbContext
     public PostDbContext(DbContextOptions<PostDbContext> options)
         : base(options) {
     }
-    public DbSet<Post> Posts { get; set; }
+    public DbSet<Post> PostsTable { get; set; }
     public DbSet<Hashtag> Hashtags { get; set; }
     public DbSet<PostHashtag> PostHashtags { get; set; }
     

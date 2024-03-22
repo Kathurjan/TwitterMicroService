@@ -6,6 +6,7 @@ public class Post
     public int UserId { get; set; }
     public string Content { get; set; }
     public DateTime CreationDate { get; set; }
+    public Boolean Edited { get; set; }
     public ICollection<PostHashtag>? Hashtags { get; set; } = new List<PostHashtag>();
 }
 public class Hashtag

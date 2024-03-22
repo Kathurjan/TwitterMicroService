@@ -22,15 +22,31 @@ var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<IPostService, PostService>();
+var secretKey = builder.Configuration.GetValue<string>("AppSettings:Token");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tBs1LL8hZaDkEOjqX6m17E6w0aOsAPJsBOFMWn1gXnrND1NVY7kSXJ0ogVdxYVbO\\n08ctrPf6Lk9Csve8yRN79g")),
-            ValidateIssuer = false, // Set to true and specify if you have a specific issuer
-            ValidateAudience = false, // Set to true and specify if you have a specific audience
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)), 
+            ValidateIssuer = false,
+            ValidateAudience = false,
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                // Log the authentication failure
+                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                // Log the success of token validation
+                Console.WriteLine("Token validated successfully");
+                return Task.CompletedTask;
+            },
         };
     });
 
@@ -74,7 +90,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

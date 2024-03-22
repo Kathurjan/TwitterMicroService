@@ -1,7 +1,5 @@
-﻿using System.Security.Claims;
-using FeedHandlingMicroservice.App;
+﻿using FeedHandlingMicroservice.App;
 using FeedHandlingMicroservice.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHandlingMicroservice.Controllers;
@@ -17,49 +15,121 @@ public class FeedController : ControllerBase
 
 
     [HttpPost("CreatePost")]
-    [Authorize]
-    public Task<Post>? CreatePost(string content)
+    public Task<IActionResult> CreatePost(string content)
     {
         try
         {
             // Access the current user's claims
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
             
             // Check if the "id" claim is present
             if (userId == null)
             {
                 throw new Exception("User ID claim not found.");
             }
-    
-            PostDto postDto = new PostDto();
-            postDto.UserId = int.Parse(userId);
-        
-            if (string.IsNullOrEmpty(content))
-            {
-                throw new Exception("Content is null or empty.");
-            }
 
-            postDto.Content = content;
-
-            if (_postService == null)
-            {
-              
-                throw new Exception("_postService is null.");
-            }
-
-            _postService.CreatePost(postDto);
-
-            // Return whatever is appropriate for your scenario
-            return null;
+            PostDto postDto = new PostDto {
+                UserId = int.Parse(userId),
+                Content = content
+            };
+            
+             _postService.CreatePost(postDto);
+            return Task.FromResult<IActionResult>(Ok("Post created successfully."));
         }
         catch (Exception e)
         {
-            
-            throw;
+
+            throw new Exception("Controller CreatePost method went wrong" + e);
+        }
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Post>> GetPostById(int id)
+    {
+        try
+        {
+            var post = await _postService.GetPostById(id);
+            return post;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Controller GetPostById method went wrong" + e);
+        }
+    }
+    
+    [HttpGet("GetAllPosts")]
+    public async Task<ActionResult<List<Post>>> GetAllPosts()
+    {
+        try
+        {
+            var posts = await _postService.GetAllPost();
+            return posts;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Controller GetAllPosts method went wrong" + e);
         }
     }
 
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<List<Post>>> GetAllPostsByUserId(int userId)
+    {
+        try
+        {
+            var posts = await _postService.GetAllPostByUserId(userId);
+            return posts;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Controller GetAllPostsByUserId method went wrong" + e);
+        }
+    }
     
+    [HttpDelete("{id}")]
+    public Task<IActionResult> DeletePost(int id)
+    {
+        try
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            
+            // Check if the "id" claim is present
+            if (userId == null)
+            {
+                throw new Exception("User ID claim not found.");
+            }
+            
+            _postService.DeletePost(id);
+            return Task.FromResult<IActionResult>(NoContent());
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Controller DeletePost method went wrong" + e);
+        }
+    }
+    
+    [HttpPut("{postId}")]
+    public async Task<ActionResult<Post>> UpdatePost(PostDto postDto, int postId)
+    {
+        try
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            
+            // Check if the "id" claim is present
+            if (userId == null)
+            {
+                throw new Exception("User ID claim not found.");
+            }
+
+            postDto.UserId = int.Parse(userId);
+            
+            var updatedPost = await _postService.UpdatePost(postDto, postId);
+            return updatedPost;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Controller UpdatePost method went wrong" + e);
+        }
+    }
     [HttpPost]
     [Route("RebuildDB")]
     public void RebuildDB()
