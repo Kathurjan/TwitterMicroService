@@ -6,7 +6,7 @@ public class Post
     public int UserId { get; set; }
     public string Content { get; set; }
     public DateTime CreationDate { get; set; }
-    public ICollection<PostHashtag> Hashtags { get; set; } = new List<PostHashtag>();
+    public ICollection<PostHashtag>? Hashtags { get; set; } = new List<PostHashtag>();
 }
 public class Hashtag
 {
@@ -23,3 +23,5 @@ public class PostHashtag
     public int HashtagId { get; set; }
     public Hashtag Hashtag { get; set; } // Establishes link to Hashtag
 }
+
+

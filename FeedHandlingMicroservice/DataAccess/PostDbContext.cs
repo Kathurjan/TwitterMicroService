@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace FeedHandlingMicroservice.DataAccess;
-public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+public class PostDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
-    public DbContext(DbContextOptions<DbContext> options)
+    public PostDbContext(DbContextOptions<PostDbContext> options)
         : base(options) {
     }
     public DbSet<Post> Posts { get; set; }
