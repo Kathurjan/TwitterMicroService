@@ -43,15 +43,10 @@ public class PostRepo : IPostRepo
 
     public async Task<Post> DeletePost(int id)
     {
-        var postToDelete = GetPostById(id);
-        if (postToDelete != null)
-        {
-            _dbContext.PostsTable.Remove(await postToDelete);
-            await _dbContext.SaveChangesAsync();
-            return await postToDelete;
-        }
-
-        throw new ArgumentException("Post not found", nameof(id));
+        var post = _dbContext.PostsTable.Find(id) ?? throw new KeyNotFoundException("No such post found");
+        _dbContext.PostsTable.Remove(post);
+        await _dbContext.SaveChangesAsync();
+        return post;
     }
 
     public async Task<Post> UpdatePost(Post post)

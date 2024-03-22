@@ -86,7 +86,7 @@ public class FeedController : ControllerBase
     }
     
     [HttpDelete("{id}")]
-    public Task<IActionResult> DeletePost(int id)
+    public void DeletePost(int id)
     {
         try
         {
@@ -99,7 +99,7 @@ public class FeedController : ControllerBase
             }
             
             _postService.DeletePost(id);
-            return Task.FromResult<IActionResult>(NoContent());
+            
         }
         catch (Exception e)
         {
