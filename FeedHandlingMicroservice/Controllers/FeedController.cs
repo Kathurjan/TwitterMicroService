@@ -108,7 +108,7 @@ public class FeedController : ControllerBase
     }
     
     [HttpPut("{postId}")]
-    public async Task<ActionResult<Post>> UpdatePost(PostDto postDto, int postId)
+    public async Task<ActionResult<Post>> UpdatePost(string content, int postId)
     {
         try
         {
@@ -120,7 +120,10 @@ public class FeedController : ControllerBase
                 throw new Exception("User ID claim not found.");
             }
 
-            postDto.UserId = int.Parse(userId);
+            PostDto postDto = new PostDto {
+                UserId = int.Parse(userId),
+                Content = content
+            };
             
             var updatedPost = await _postService.UpdatePost(postDto, postId);
             return updatedPost;

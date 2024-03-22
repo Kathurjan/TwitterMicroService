@@ -11,12 +11,13 @@ public class PostRepo : IPostRepo
         _dbContext = dbContext;
     }
 
-    public async void CreatePost(Post post)
+    public async Task<Post> CreatePost(Post post)
     {
         try
         {
-            _dbContext.PostsTable.Add(post);
+            await _dbContext.PostsTable.AddAsync(post);
             await _dbContext.SaveChangesAsync();
+            return post;
         }
         catch (Exception e)
         {
@@ -40,13 +41,14 @@ public class PostRepo : IPostRepo
         return _dbContext.PostsTable.Where(p => p.Id == userId).ToListAsync();
     }
 
-    public async void DeletePost(int id)
+    public async Task<Post> DeletePost(int id)
     {
         var postToDelete = await _dbContext.PostsTable.FindAsync(id);
         if (postToDelete != null)
         {
             _dbContext.PostsTable.Remove(postToDelete);
             await _dbContext.SaveChangesAsync();
+            return postToDelete;
         }
         else
         {
@@ -66,7 +68,6 @@ public class PostRepo : IPostRepo
         existingPost.Edited = true;
         
         await _dbContext.SaveChangesAsync();
-
         return existingPost;
     }
 

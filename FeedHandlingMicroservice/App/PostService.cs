@@ -16,13 +16,13 @@ public class PostService : IPostService
     }
 
 
-    public void CreatePost(PostDto postDto)
+    public Task<Post> CreatePost(PostDto postDto)
     {
         try
         {
             var post = _mapper.Map<Post>(postDto);
             post.CreationDate = DateTime.Now;
-            _postRepo.CreatePost(post);
+            return _postRepo.CreatePost(post);
         }
         catch (Exception e)
         {
@@ -66,11 +66,11 @@ public class PostService : IPostService
         }
     }
 
-    public void DeletePost(int id)
+    public Task<Post> DeletePost(int id)
     {
         try
         {
-            _postRepo.DeletePost(id);
+           return _postRepo.DeletePost(id);
         }
         catch (Exception e)
         {
@@ -78,12 +78,19 @@ public class PostService : IPostService
         }
     }
 
-    public async Task<Post> UpdatePost(PostDto postDto)
+    public async Task<Post> UpdatePost(PostDto postDto, int postId)
     {
         try
         {
-            var post = _mapper.Map<Post>(postDto);
-            return await _postRepo.UpdatePost(post);
+            var validationPost = await _postRepo.GetPostById(postId);
+            if (postDto.UserId == validationPost.UserId)
+            {
+                var post = _mapper.Map<Post>(postDto);
+                post.Id = postId;
+                return await _postRepo.UpdatePost(post);
+            }
+
+            throw new Exception("Deletion not permitted" );
         }
         catch (Exception e)
         {
