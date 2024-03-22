@@ -1,4 +1,5 @@
-﻿using FeedHandlingMicroservice.App;
+﻿using System.Security.Claims;
+using FeedHandlingMicroservice.App;
 using FeedHandlingMicroservice.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,26 +18,47 @@ public class FeedController : ControllerBase
 
     [HttpPost("CreatePost")]
     [Authorize]
-    public Task<Post>? CreatePost([FromBody] PostDto postDto)
+    public Task<Post>? CreatePost(string content)
     {
         try
         {
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
-            var userId = int.Parse(userIdClaim.Value);
-            postDto.UserId = userId;
+            // Access the current user's claims
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            // Check if the "id" claim is present
+            if (userId == null)
+            {
+                throw new Exception("User ID claim not found.");
+            }
+    
+            PostDto postDto = new PostDto();
+            postDto.UserId = int.Parse(userId);
+        
+            if (string.IsNullOrEmpty(content))
+            {
+                throw new Exception("Content is null or empty.");
+            }
+
+            postDto.Content = content;
+
+            if (_postService == null)
+            {
+              
+                throw new Exception("_postService is null.");
+            }
+
             _postService.CreatePost(postDto);
+
+            // Return whatever is appropriate for your scenario
             return null;
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw new Exception("Controller went wrong" + e);
+            
+            throw;
         }
     }
-    
-    
-    
-    
+
     
     [HttpPost]
     [Route("RebuildDB")]

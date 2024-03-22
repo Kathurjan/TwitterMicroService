@@ -17,6 +17,7 @@ public class Authentication
     public string CreateToken(User user)
     {  List<Claim> claims = new List<Claim>();
        
+        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
         claims.Add(new Claim("id", user.Id.ToString()));
         claims.Add(new Claim("name", user.Username)); ;
         claims.Add(new Claim("email",user.Email));

@@ -28,13 +28,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKey")),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tBs1LL8hZaDkEOjqX6m17E6w0aOsAPJsBOFMWn1gXnrND1NVY7kSXJ0ogVdxYVbO\\n08ctrPf6Lk9Csve8yRN79g")),
             ValidateIssuer = false, // Set to true and specify if you have a specific issuer
             ValidateAudience = false, // Set to true and specify if you have a specific audience
         };
     });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -68,8 +67,6 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
