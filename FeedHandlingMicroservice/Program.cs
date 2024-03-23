@@ -22,6 +22,8 @@ var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IHashTagRepo, HashTagRepo>();
+builder.Services.AddScoped<IHashTagService, HashTagService>();
 var secretKey = builder.Configuration.GetValue<string>("AppSettings:Token");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
