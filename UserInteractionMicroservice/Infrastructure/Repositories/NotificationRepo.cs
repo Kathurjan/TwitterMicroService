@@ -1,29 +1,31 @@
 using Entities;
+using Infrastructure.Contexts;
 using Infrastructure.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DbContext = Infrastructure.Contexts.DbContext;
+
 
 namespace Infrastructure.Repositories;
 
 public class NotificationRepo : INotificationRepo
 {
-    private readonly DbContext _dbContext;
 
-    public NotificationRepo(DbContext dbContext)
+
+
+    private readonly UserInteractionDbContext _dbContext;
+    public NotificationRepo(UserInteractionDbContext dbContext)
+
     {
         _dbContext = dbContext;
     }
 
-    public Notification CreateNotification(Notification notification)
+    public async Task CreateNotification(Notification notification)
     {
         try
         {
             _dbContext.Notifications.Add(notification);
 
             _dbContext.SaveChangesAsync();
-
-            return notification;
         }
         catch (Exception e)
         {
@@ -45,7 +47,7 @@ public class NotificationRepo : INotificationRepo
         }
     }
 
-    public Task<List<Notification>> GetNotificationsByUserId(int userId)
+    public Task<List<Notification>> GetNotificationsByUserId(string userId)
     {
         try
         {

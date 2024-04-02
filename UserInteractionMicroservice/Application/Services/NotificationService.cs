@@ -3,13 +3,15 @@ using Entities;
 using Infrastructure.IRepositories;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
+using Sockets;
 
 namespace Application.Services
 {
     public class NotificationService : INotificationService
     {   
 
-
+        private NotificationSocket _notificationSocket;
         private readonly INotificationRepo _notificationRepo;
         public NotificationService(INotificationRepo notificationRepo)
         {
@@ -17,7 +19,7 @@ namespace Application.Services
         }
 
 
-        public Notification CreateNotification(NotificationDto notificationDto)
+        public async Task CreateNotification(NotificationDto notificationDto)
         {
             Notification notification = new Notification()
             {
@@ -26,30 +28,30 @@ namespace Application.Services
                 Message = notificationDto.Message,
                 DateOfDelivery = DateTime.Now
             };
-
-            _notificationRepo.CreateNotification(notification);
-
-            return notification;
+            
+            await _notificationRepo.CreateNotification(notification);
+            await _notificationSocket.SendNotification(notification);
+            
         }
 
-        public Task<List<int>> GetFollowedEntities(int userId)
+        public Task<List<string>> GetFollowedEntities(string userId)
         {
-            List<int> followedEntities = new List<int>()
+            List<string> followedEntities = new List<string>()
             {
-                1, // Example entity ID
-                2, // Example entity ID
-                3  // Example entity ID
+                "1", // Example entity ID
+                "2", // Example entity ID
+                "3"  // Example entity ID
             };
 
             return Task.FromResult(followedEntities);
         }
 
-        public Task GetNotificationsByUserId(int userId)
+        public Task GetNotificationsByUserId(string userId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ActionResult<string>> CreateTestUser(int userId)
+        public async Task<ActionResult<string>> CreateTestUser(string userId)
         {
             var user = new User()
             {

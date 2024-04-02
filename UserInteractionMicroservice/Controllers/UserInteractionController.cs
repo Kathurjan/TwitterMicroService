@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using RabbitMq.RabbitMqIServices;
 using Application.Interfaces;
 using DTO;
+using Entities;
 
 namespace Controllers.UserInteractionController; 
 
@@ -19,11 +20,11 @@ public class UserInteractionController : ControllerBase
         _notificationService = notificationService;
     }
     
-    [HttpPost("SendTest")]
-    public void ConsumeUserInteraction(TestInteraction testInteraction)
+    [HttpPost("Notify")]
+    public void ConsumeNotification(NotificationDto notification)
     {
-        Console.WriteLine("UserInteractionController: " + testInteraction.Message);
-        _rabbitMqSender.Send(testInteraction);
+        Console.WriteLine("UserInteractionController: " + notification.Message);
+        _notificationService.CreateNotification(notification);
     }
 
     [HttpPost("NotificationTest")]
@@ -33,9 +34,9 @@ public class UserInteractionController : ControllerBase
     }
 
     [HttpPost("CreateTestUser")]
-    public async Task<ActionResult<string>> CreateTestUser(int userId)
+    public async Task<ActionResult<string>> CreateTestUser(UserCreationDTO userCreationDTO)
     {
-        var result = await _notificationService.CreateTestUser(userId);
+        var result = await _notificationService.CreateTestUser(userCreationDTO.UserId);
 
         return Ok(result);
     }

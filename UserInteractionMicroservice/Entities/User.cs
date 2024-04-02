@@ -2,7 +2,9 @@ namespace Entities;
 
 public class User
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
 
-    public List<Notification> Notifications { get; set; }
+    public ICollection<NotificationUserRelation> NotificationUserRelations { get; set; }
+
+    public ICollection<Notification> Notifications { get; set; }
 }

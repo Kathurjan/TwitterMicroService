@@ -5,47 +5,45 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Entities;
 using Application.Interfaces;
+using DTO;
 namespace Sockets;
 
 
 public class NotificationSocket : Hub
 {
-    // Assuming you have a service to manage notifications, injected via DI
+    private readonly IHubContext<NotificationSocket> _notificationSocket;
     private readonly INotificationService _notificationService;
 
-    public NotificationSocket(INotificationService notificationService)
+    public NotificationSocket(
+        INotificationService notificationService, 
+        IHubContext<NotificationSocket> notificationSocket
+    )
     {
+        _notificationSocket = notificationSocket; 
         _notificationService = notificationService;
     }
 
     public override async Task OnConnectedAsync()
     {
-
-        var userIdString = Context.UserIdentifier;
-        if (userIdString != null)
+        var userId = Context.UserIdentifier;
+        if (!string.IsNullOrEmpty(userId)) // Check if userId is not null or empty
         {
-            if (int.TryParse(userIdString, out int userId))
+        
+            var following = await _notificationService.GetFollowedEntities(userId); // Get entities the user is following
+            foreach (var entity in following)
             {
-                var following = await _notificationService.GetFollowedEntities(userId); // Get entities the user is following
-                foreach (var entity in following)
-                {
-                    await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(entity, "following"));
-                }
-                await base.OnConnectedAsync();
+                await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(entity, "following"));
             }
-            else
-            {
-                Console.WriteLine("Invalid user identifier format");
-            }
+            await base.OnConnectedAsync();
         }
         else
         {
-            Console.WriteLine("User identifier is null");
+            Console.WriteLine("Invalid user identifier format or user identifier is null");
         }
     }
 
     // Method to associate a connection with a notification group, called after user sends their identifier
-    public async Task AssociateWithNewNotificationGroup(int userId)
+    public async Task FollowNotificationGroup(string userId)
     {
         Console.WriteLine(userId);
         // Retrieve notification info for the user
@@ -65,15 +63,14 @@ public class NotificationSocket : Hub
 
 
     // Helper method to create a consistent group name
-    private string GenerateGroupName(int userId, string type)
+    private string GenerateGroupName(string userId, string type)
     {
         return $"{userId}-{type}";
     }
     public async Task SendNotification(Notification notification)
     {
         var groupName = GenerateGroupName(notification.UserId, notification.Type);
-        // Convert the notification object to a format suitable for sending, if necessary
-        // For simplicity, we'll assume you can send the object directly
-        await Clients.Group(groupName).SendAsync("ReceiveNotification", notification);
+        /* await Clients.Group(groupName).SendAsync("ReceiveNotification", notification); */
+        Console.WriteLine(notification.Message+ " Sent to notification group: "+ groupName);
     }
 }
