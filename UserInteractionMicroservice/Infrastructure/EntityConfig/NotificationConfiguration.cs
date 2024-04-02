@@ -15,4 +15,6 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         builder.Property(n => n.Message).IsRequired();
         builder.Property(n => n.DateOfDelivery).IsRequired();
     }
+
+    
 }

@@ -4,51 +4,95 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DbContext = Infrastructure.Contexts.DbContext;
 
-
 namespace Infrastructure.Repositories;
-
 
 public class NotificationRepo : INotificationRepo
 {
     private readonly DbContext _dbContext;
+
     public NotificationRepo(DbContext dbContext)
     {
         _dbContext = dbContext;
-
     }
 
     public Notification CreateNotification(Notification notification)
     {
-        Console.WriteLine("Creating notification");
-        Console.WriteLine(notification.UserId);
-        Console.WriteLine(notification.Type);
-        Console.WriteLine(notification.Message);
+        try
+        {
+            _dbContext.Notifications.Add(notification);
 
-        _dbContext.Notifications.Add(notification);
+            _dbContext.SaveChangesAsync();
 
-        _dbContext.SaveChangesAsync();
-
-        return notification;
+            return notification;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    Task<Notification> INotificationRepo.GetNotificationById(int id)
+    public Task<Notification> GetNotificationById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return _dbContext.Notifications.FirstOrDefaultAsync(n => n.Id == id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    Task<List<Notification>> INotificationRepo.GetNotificationsByUserId(int userId)
+    public Task<List<Notification>> GetNotificationsByUserId(int userId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return _dbContext.Notifications.Where(n => n.UserId == userId).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     public Task<Notification> UpdateNotification(Notification notification)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _dbContext.Notifications.Update(notification);
+            _dbContext.SaveChangesAsync();
+            return Task.FromResult(notification);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     public Task<bool> DeleteNotification(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var notificationToDelete = _dbContext.Notifications.FirstOrDefault(n => n.Id == id);
+
+            if (notificationToDelete != null)
+            {
+                _dbContext.Notifications.Remove(notificationToDelete);
+                _dbContext.SaveChangesAsync();
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     public async Task<ActionResult<string>> CreateTestUser(User user)
@@ -71,7 +115,6 @@ public class NotificationRepo : INotificationRepo
         catch (Exception e)
         {
             Console.WriteLine(e);
-            
         }
     }
 }
