@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
+using FeedHandlingMicroservice.RabbitMq.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHandlingMicroservice.App;
@@ -9,14 +10,17 @@ public class PostService : IPostService
 {
     private readonly IMapper _mapper;
     private readonly IPostRepo _postRepo;
-    public PostService(IMapper mapper, IPostRepo postRepo)
+    private readonly IRabbitMqSender _rabbitMqSender;
+    public PostService(IMapper mapper, IPostRepo postRepo, IRabbitMqSender rabbitMqSender)
     {
         _mapper = mapper;
         _postRepo = postRepo;
+        _rabbitMqSender = rabbitMqSender;
     }
 
+    
+    public async Task<Post> CreatePost(Post post)
 
-    public Task<Post> CreatePost(Post post)
     {
         if (post == null)
         {
@@ -25,7 +29,12 @@ public class PostService : IPostService
         try
         {
             post.CreationDate = DateTime.Now;
-            return _postRepo.CreatePost(post);
+            
+            var createdPost = await _postRepo.CreatePost(post);
+            
+            _rabbitMqSender.SendUserId(post.UserId);
+
+            return createdPost;
         }
         catch (Exception e)
         {
