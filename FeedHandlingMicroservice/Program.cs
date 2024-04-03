@@ -3,6 +3,7 @@ using AutoMapper;
 using FeedHandlingMicroservice.App;
 using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
+using FeedHandlingMicroservice.RabbitMq.Helpers;
 using FeedHandlingMicroservice.RabbitMq.Interfaces;
 using FeedHandlingMicroservice.RabbitMq.RabbitMqServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IHashTagRepo, HashTagRepo>();
 builder.Services.AddScoped<IHashTagService, HashTagService>();
 builder.Services.AddScoped<IRabbitMqSender, RabbitMqSender>();
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMqSettings"));
 var secretKey = builder.Configuration.GetValue<string>("AppSettings:Token");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -1,6 +1,9 @@
-﻿namespace FeedHandlingMicroservice.RabbitMq.Helpers;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FeedHandlingMicroservice.RabbitMq.Helpers;
 
 public class RabbitMqSettings
 {
-    public required string QueueName { get; set; }
+    [Required]
+    public string QueueName { get; set; }
 }
