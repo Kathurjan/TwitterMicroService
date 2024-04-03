@@ -64,4 +64,10 @@ public class HashTagRepo : IHashTagRepo
         await _dbContext.SaveChangesAsync();
         return hashTagToDelete;
     }
+
+    public async Task<Hashtag> FindByTag(string tag)
+    {
+        var hashtag = await _dbContext.Hashtags.FirstOrDefaultAsync(h => h.Tag == tag);
+        return hashtag;
+    }
 }

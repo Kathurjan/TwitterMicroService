@@ -34,7 +34,7 @@ public class HashTagController  : ControllerBase
         }
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("Hashtag{id}")]
     public async Task<ActionResult<Hashtag>> GetHashTagById(int id)
     {
         try
@@ -62,7 +62,7 @@ public class HashTagController  : ControllerBase
         }
     }
     
-    [HttpDelete("{id}")]
+    [HttpDelete("DeletHashTag{id}")]
     public void DeleteHashTag(int id)
     {
         try

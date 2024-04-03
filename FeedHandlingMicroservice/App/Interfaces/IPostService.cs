@@ -5,7 +5,7 @@ namespace FeedHandlingMicroservice.App;
 
 public interface IPostService
 {
-    Task<Post> CreatePost(PostDto postDto);
+    Task<Post> CreatePost(Post post);
     Task<Post> GetPostById(int id);
     Task<List<Post>> GetAllPost();
     Task<List<Post>> GetAllPostByUserId(int userId);

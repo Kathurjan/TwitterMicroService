@@ -63,4 +63,31 @@ public class HashTagService : IHashTagService
             throw new Exception("DeleteHashtagById in Service went wrong: " + e);
         }
     }
+    public async Task<Hashtag> FindOrCreateTagAsync(string tag)
+    {
+        try
+        {
+            // Attempt to find the hashtag by its tag.
+            Hashtag hashtag = await _hashTagRepo.FindByTag(tag);
+            
+            // If the hashtag doesn't exist, create a new one.
+            if (hashtag == null)
+            { 
+                HashtagDto hashtagDto = new HashtagDto
+                {
+                    Tag = tag
+                };
+            
+                // Use await to ensure the hashtag is created before proceeding.
+                hashtag = await CreateNewHashtag(hashtagDto);
+            }
+
+
+            return hashtag;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("FindOrCreateHashtag went wrong: " + e.Message, e);
+        }
+    }
 }

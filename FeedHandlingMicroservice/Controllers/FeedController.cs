@@ -8,41 +8,51 @@ namespace FeedHandlingMicroservice.Controllers;
 public class FeedController : ControllerBase
 {
     private readonly IPostService _postService;
-    public FeedController(IPostService postService)
+    private readonly IHashTagService _hashTagService;
+    public FeedController(IPostService postService, IHashTagService hashTagService)
     {
         _postService = postService;
+        _hashTagService = hashTagService;
     }
 
 
     [HttpPost("CreatePost")]
-    public async Task<IActionResult> CreatePost([FromBody] PostDto postDtoToChange)
+    public async Task<IActionResult> CreatePost([FromBody] PostDto postDto)
     {
         try
         {
-            // Access the current user's claims
             var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            
-            // Check if the "id" claim is present
+
             if (userId == null)
             {
-                throw new Exception("User ID claim not found.");
+                return BadRequest("User ID is required.");
             }
 
-            PostDto postDto = new PostDto {
+            // Convert DTO to domain model
+            var post = new Post
+            {
                 UserId = int.Parse(userId),
-                Content = postDtoToChange.Content,
-                Hashtags = postDtoToChange.Hashtags
+                Content = postDto.Content,
+                CreationDate = DateTime.UtcNow,
+                Edited = false, 
+                Hashtags = new List<PostHashtag>()
             };
-            
-             await _postService.CreatePost(postDto);
+
+            foreach (var tag in postDto.Hashtags)
+            {
+                var hashtag = await _hashTagService.FindOrCreateTagAsync(tag); 
+                post.Hashtags.Add(new PostHashtag { Hashtag = hashtag });
+            }
+
+            await _postService.CreatePost(post); 
             return Ok("Post created successfully.");
         }
         catch (Exception e)
         {
-
-            throw new Exception("Controller CreatePost method went wrong" + e);
+            return BadRequest($"An error occurred: {e.Message}");
         }
     }
+
     
     [HttpGet("{id}")]
     public async Task<ActionResult<Post>> GetPostById(int id)

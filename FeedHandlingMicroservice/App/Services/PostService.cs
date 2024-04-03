@@ -16,11 +16,14 @@ public class PostService : IPostService
     }
 
 
-    public Task<Post> CreatePost(PostDto postDto)
+    public Task<Post> CreatePost(Post post)
     {
+        if (post == null)
+        {
+            throw new ArgumentNullException(nameof(post), "Provided post is null");
+        }
         try
         {
-            var post = _mapper.Map<Post>(postDto);
             post.CreationDate = DateTime.Now;
             return _postRepo.CreatePost(post);
         }
