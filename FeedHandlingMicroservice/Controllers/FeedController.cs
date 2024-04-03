@@ -15,7 +15,7 @@ public class FeedController : ControllerBase
 
 
     [HttpPost("CreatePost")]
-    public async Task<IActionResult> CreatePost(string content)
+    public async Task<IActionResult> CreatePost([FromBody] PostDto postDtoToChange)
     {
         try
         {
@@ -30,7 +30,8 @@ public class FeedController : ControllerBase
 
             PostDto postDto = new PostDto {
                 UserId = int.Parse(userId),
-                Content = content
+                Content = postDtoToChange.Content,
+                Hashtags = postDtoToChange.Hashtags
             };
             
              await _postService.CreatePost(postDto);
