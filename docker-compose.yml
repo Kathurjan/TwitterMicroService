@@ -1,4 +1,19 @@
 ﻿services:
+  seq:
+    image: datalust/seq
+    ports:
+      - "5342:80"
+      - "5341:5341"
+    volumes:
+      - rps_seq_data1:/data
+    environment:
+      - ACCEPT_EULA=Y
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5341/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   rabbitmq:
     image: rabbitmq:management
     ports:
@@ -33,3 +48,8 @@ networks:
   default:
     external:
       name: microservices
+
+
+volumes:
+  rps_seq_data1:
+

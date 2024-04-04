@@ -3,6 +3,7 @@ using Infrastructure.Contexts;
 using Infrastructure.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Monitor;
 
 
 namespace Infrastructure.Repositories;
@@ -42,8 +43,8 @@ public class NotificationRepo : INotificationRepo
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            MonitorService.Log.Error(e.Message);
+            throw new Exception("Did not find notification with that id");
         }
     }
 

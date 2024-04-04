@@ -2,7 +2,7 @@ namespace DTO;
 
 public class NotificationDto
 {
-    public required string Message { get; set; }
-    public required string UserId { get; set; }
-    public required string Type { get; set; }
+    public string Message { get; set; }
+    public string UserId { get; set; }
+    public string Type { get; set; }
 }

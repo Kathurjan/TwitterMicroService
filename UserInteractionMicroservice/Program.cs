@@ -6,11 +6,16 @@ using Infrastructure.Helpers;
 using Infrastructure.Contexts;
 using RabbitMq.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.SignalR;
+using EasyNetQ;
+using NetQ;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=localhost")));
+builder.Services.AddHostedService<EasyNetQReceiver>();
 var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
 builder.Services.AddDbContext<UserInteractionDbContext>(options =>
     options.UseSqlServer(_connectionStringUseSqlServer));
@@ -26,7 +31,6 @@ builder.Services.AddSignalR(options =>
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Register your RabbitMQ receiver
-RabbitMq.DependencyResolver.DependencyResolverRabbitMq.RegisterRabbitMqLayer(builder.Services);
 Infastructure.DependencyResolver.DependencyResolverInfrastruce.RegistInfrastructure(builder.Services);
 
 builder.Services.Configure<InfrastructureSettings>(builder.Configuration.GetSection("InfrastructureSettings"));
@@ -35,8 +39,6 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("R
 //var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
 //builder.Services.AddDbContext<DbContextManagement>(options =>
 //   options.UseSqlite(_connectionString));
-
-
 
 var app = builder.Build();
 
@@ -49,23 +51,11 @@ app.UseCors(options =>
         .AllowCredentials();
 });
 
-
-
-    
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Resolve IRabbitMqReceiver within a scope
-using (var scope = app.Services.CreateScope())
-{
-    var serviceProvider = scope.ServiceProvider;
-    var rabbitMqReceiver = serviceProvider.GetRequiredService<IRabbitMqReceiver>();
-
-    // Start receiving messages
-    rabbitMqReceiver.Receive();
-}
 app.MapHub<NotificationSocket>("/SocketNotification");
 app.Run();
