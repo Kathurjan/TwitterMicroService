@@ -6,7 +6,6 @@ using AuthMicroservice.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using DbContext = AuthMicroservice.DataAccess.DbContext;
-using IMapper;
 
 
 var builder = WebApplication.CreateBuilder(args);

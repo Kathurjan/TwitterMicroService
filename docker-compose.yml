@@ -26,21 +26,24 @@
   authmicroservice:
     image: authmicroservice
     build:
-      context: ./AuthMicroservice
+      context: .
+      dockerfile: AuthMicroservice/Dockerfile
     depends_on:
       - rabbitmq
 
   userinteractionmicroservice:
     image: userinteractionmicroservice
     build:
-      context: ./UserInteractionMicroservice
+      context: .
+      dockerfile: UserInteractionMicroservice/Dockerfile
     depends_on:
       - rabbitmq
 
   feedhandlingmicroservice:
     image: feedhandlingmicroservice
-    build:
-      context: ./FeedHandlingMicroservice
+    build: 
+      context: .
+      dockerfile: FeedHandlingMicroservice/Dockerfile
     depends_on:
       - rabbitmq
 

@@ -148,7 +148,7 @@ public class AuthController : ControllerBase
 
     }
     
-    [HttpGet]
+    [HttpPost]
     [Route("RebuildDB")]
     public void RebuildDB()
     {
