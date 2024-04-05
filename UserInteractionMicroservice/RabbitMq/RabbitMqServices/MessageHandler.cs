@@ -1,4 +1,4 @@
-using DTO;
+using SharedLibrary;
 using EasyNetQ;
 
 namespace NetQ
@@ -11,9 +11,9 @@ namespace NetQ
 
             var messageClient = new MessageClient(RabbitHutch.CreateBus(connectionStr));
 
-            messageClient.Listen<string>(OnMessageReceived, "notificationCreation");
+            messageClient.Listen<NotificationDto>(OnMessageReceived, "notificationCreation");
 
-            void OnMessageReceived(string notificationDto)
+            void OnMessageReceived(NotificationDto notificationDto)
             {
                 try
                 {

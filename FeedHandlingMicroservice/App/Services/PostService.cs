@@ -23,8 +23,6 @@ public class PostService : IPostService
         _messageClient = messageClient;
     }
  
-
-    
     public async Task<Post> CreatePost(Post post)
 
     {
@@ -41,6 +39,7 @@ public class PostService : IPostService
                 Type = "Post"
 
             };
+            
             post.CreationDate = DateTime.Now;
             
             var createdPost = await _postRepo.CreatePost(post);

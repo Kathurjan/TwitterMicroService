@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using DTO;
-using Entities;
-using SharedLibrary;
+
+
 
 namespace Controllers.UserInteractionController; 
 
@@ -18,18 +18,6 @@ public class UserInteractionController : ControllerBase
         _notificationService = notificationService;
     }
     
-    [HttpPost("Notify")]
-    public void ConsumeNotification(NotificationDto notification)
-    {
-        Console.WriteLine("UserInteractionController: " + notification.Message);
-        _notificationService.CreateNotification(notification);
-    }
-
-    [HttpPost("NotificationTest")]
-    public void CreateNotification(NotificationDto notificationDto)
-    {
-        _notificationService.CreateNotification(notificationDto);
-    }
 
     [HttpPost("CreateTestUser")]
     public async Task<ActionResult<string>> CreateTestUser(UserCreationDTO userCreationDTO)
