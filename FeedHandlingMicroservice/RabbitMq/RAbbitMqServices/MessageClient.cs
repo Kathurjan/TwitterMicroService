@@ -1,4 +1,5 @@
 using EasyNetQ;
+using SharedLibrary;
 
 
 namespace NetQ
@@ -19,7 +20,7 @@ namespace NetQ
             _bus.PubSub.Subscribe(queueName, handler);
         }
 
-        public void Publish<T>(T message, string queueName)
+        public void Publish<NotificationDto>(NotificationDto message, string queueName)
         {
             Console.WriteLine(message);
             _bus.PubSub.Publish("message", queueName);
