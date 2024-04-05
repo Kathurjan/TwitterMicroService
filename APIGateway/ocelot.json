@@ -1,0 +1,25 @@
+﻿{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/Feed",
+      "UpstreamHttpMethod": ["Get","Post","Delete","Put"],
+      "DownstreamPathTemplate": "/feedhandlingmicroservice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{
+        "Host": "feedhandlingmicroservice",
+        "Port": 80
+      }]
+    },
+    {
+      "UpstreamPathTemplate": "/HashTag",
+      "UpstreamHttpMethod": ["Get","Post","Delete","Put"],
+      "DownstreamPathTemplate": "/feedhandlingmicroservice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{
+        "Host": "feedhandlingmicroservice",
+        "Port": 80
+      }]
+    }
+  ]
+
+}

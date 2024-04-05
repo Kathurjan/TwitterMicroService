@@ -8,6 +8,12 @@
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: password
 
+  apigateway:
+    image: apigateway
+    build:
+      context: .
+      dockerfile: APIGateway/Dockerfile
+
   authmicroservice:
     image: authmicroservice
     build:
@@ -15,6 +21,7 @@
       dockerfile: AuthMicroservice/Dockerfile
     depends_on:
       - rabbitmq
+      - apigateway
 
   userinteractionmicroservice:
     image: userinteractionmicroservice
@@ -23,6 +30,7 @@
       dockerfile: UserInteractionMicroservice/Dockerfile
     depends_on:
       - rabbitmq
+      - apigateway
 
   feedhandlingmicroservice:
     image: feedhandlingmicroservice
@@ -31,6 +39,7 @@
       dockerfile: FeedHandlingMicroservice/Dockerfile
     depends_on:
       - rabbitmq
+      - apigateway
 
 networks:
   default:
