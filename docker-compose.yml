@@ -41,7 +41,3 @@
       - rabbitmq
       - apigateway
 
-networks:
-  default:
-    external:
-      name: microservices

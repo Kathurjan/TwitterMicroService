@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
-using FeedHandlingMicroservice.RabbitMq.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+
+using NetQ;
+
 
 namespace FeedHandlingMicroservice.App;
 
@@ -10,13 +11,16 @@ public class PostService : IPostService
 {
     private readonly IMapper _mapper;
     private readonly IPostRepo _postRepo;
-    private readonly IRabbitMqSender _rabbitMqSender;
-    public PostService(IMapper mapper, IPostRepo postRepo, IRabbitMqSender rabbitMqSender)
+
+    private readonly MessageClient _messageClient;
+
+    public PostService(IMapper mapper, IPostRepo postRepo, MessageClient messageClient)
     {
         _mapper = mapper;
         _postRepo = postRepo;
-        _rabbitMqSender = rabbitMqSender;
+        _messageClient = messageClient;
     }
+ 
 
     
     public async Task<Post> CreatePost(Post post)
@@ -39,7 +43,10 @@ public class PostService : IPostService
             
             var createdPost = await _postRepo.CreatePost(post);
             
-            _rabbitMqSender.SendUserId(notificationDto);
+            _messageClient.Publish(notificationDto, "notificationCreation");
+          
+            Console.WriteLine(notificationDto.Message);
+            Console.WriteLine("Post created and notification sent");
 
             return createdPost;
         }

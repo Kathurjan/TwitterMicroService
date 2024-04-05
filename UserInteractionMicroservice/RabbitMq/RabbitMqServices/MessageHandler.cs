@@ -5,11 +5,11 @@ using Monitor;
 
 namespace NetQ
 {
-    public class EasyNetQReceiver : BackgroundService
+    public class MessageHandler : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public EasyNetQReceiver(IServiceProvider serviceProvider)
+        public MessageHandler(IServiceProvider serviceProvider)
         {
             _serviceProvider =
                 serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -40,7 +40,7 @@ namespace NetQ
                     }
                 }
 
-                messageClient.Listen<NotificationDto>(OnMessageReceived, "NewQueue");
+                messageClient.Listen<NotificationDto>(OnMessageReceived, "notificationCreation");
 
                 while (!stoppingToken.IsCancellationRequested)
                 {

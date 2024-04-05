@@ -1,10 +1,8 @@
-using RabbitMq.RabbitMqIServices;
 using Application.Interfaces;
 using Application.Services;
 using Sockets;
 using Infrastructure.Helpers;
 using Infrastructure.Contexts;
-using RabbitMq.Helpers;
 using Microsoft.EntityFrameworkCore;
 using EasyNetQ;
 using NetQ;
@@ -15,7 +13,7 @@ using NetQ;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=localhost")));
-builder.Services.AddHostedService<EasyNetQReceiver>();
+builder.Services.AddHostedService<MessageHandler>();
 var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
 builder.Services.AddDbContext<UserInteractionDbContext>(options =>
     options.UseSqlServer(_connectionStringUseSqlServer));
@@ -34,7 +32,6 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 Infastructure.DependencyResolver.DependencyResolverInfrastruce.RegistInfrastructure(builder.Services);
 
 builder.Services.Configure<InfrastructureSettings>(builder.Configuration.GetSection("InfrastructureSettings"));
-builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMqSettings"));
 
 //var _connectionString = builder.Configuration.GetValue<string>("InfrastructureSettings:DefaultConnection");
 //builder.Services.AddDbContext<DbContextManagement>(options =>

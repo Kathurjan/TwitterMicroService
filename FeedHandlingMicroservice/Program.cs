@@ -3,33 +3,39 @@ using AutoMapper;
 using FeedHandlingMicroservice.App;
 using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
-using FeedHandlingMicroservice.RabbitMq.Helpers;
-using FeedHandlingMicroservice.RabbitMq.Interfaces;
 using FeedHandlingMicroservice.RabbitMq.RabbitMqServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using EasyNetQ;
+using NetQ;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add DbContext
 builder.Services.AddDbContext<PostDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PostDb")));
-builder.Services.AddControllers();
+
+// Add AutoMapper
 var config = new MapperConfiguration(conf =>
 {
     conf.CreateMap<PostDto, Post>();
     conf.CreateMap<HashtagDto, Hashtag>();
-    
 });
+builder.Services.AddSingleton(config.CreateMapper());
 
-var mapper = config.CreateMapper();
-builder.Services.AddSingleton(mapper);
+builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=localhost")));
+builder.Services.AddHostedService<MessageHandler>();
+// Add services
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IHashTagRepo, HashTagRepo>();
 builder.Services.AddScoped<IHashTagService, HashTagService>();
-builder.Services.AddScoped<IRabbitMqSender, RabbitMqSender>();
-builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMqSettings"));
+builder.Services.AddControllers();
+
+
+// Configure authentication
 var secretKey = builder.Configuration.GetValue<string>("AppSettings:Token");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -58,6 +64,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Add authorization services
+builder.Services.AddAuthorization();
+
+// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -89,8 +99,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

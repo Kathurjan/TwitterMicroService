@@ -416,3 +416,6 @@ FeedHandlingMicroservice/obj/Debug/net7.0/FeedHandlingMicroservice.assets.cache
 FeedHandlingMicroservice/obj/Debug/net7.0/FeedHandlingMicroservice.csproj.AssemblyReference.cache
 FeedHandlingMicroservice/obj/Debug/net7.0/FeedHandlingMicroservice.GeneratedMSBuildEditorConfig.editorconfig
 UserInteractionMicroservice/obj/Debug/net7.0/UserInteractionMicroservice.assets.cache
+
+appsettings.Development.json
+appsettings.json
