@@ -28,11 +28,18 @@ public class PostService : IPostService
         }
         try
         {
+            NotificationDto notificationDto = new NotificationDto
+            {
+                UserId = post.UserId,
+                Message = post.Content,
+                Type = "Post"
+
+            };
             post.CreationDate = DateTime.Now;
             
             var createdPost = await _postRepo.CreatePost(post);
             
-            _rabbitMqSender.SendUserId(post.UserId);
+            _rabbitMqSender.SendUserId(notificationDto);
 
             return createdPost;
         }
