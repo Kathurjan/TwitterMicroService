@@ -14,45 +14,22 @@
       timeout: 5s
       retries: 3
 
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
 
-  authmicroservice:
-    image: authmicroservice
-    build:
-      context: .
-      dockerfile: AuthMicroservice/Dockerfile
-    depends_on:
-      - rabbitmq
 
-  userinteractionmicroservice:
-    image: userinteractionmicroservice
-    build:
-      context: .
-      dockerfile: UserInteractionMicroservice/Dockerfile
-    depends_on:
-      - rabbitmq
-
-  feedhandlingmicroservice:
-    image: feedhandlingmicroservice
-    build: 
-      context: .
-      dockerfile: FeedHandlingMicroservice/Dockerfile
-    depends_on:
-      - rabbitmq
-
-networks:
-  default:
-    external:
-      name: microservices
+  mysql_db1:
+      image: mysql:latest
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: password_db1
+        MYSQL_DATABASE: db1
+      ports:
+        - "1433:1433"
+      volumes:
+        - mysql_data_db1:/var/lib/mysql
 
 
 volumes:
+  mysql_data_db1:
   rps_seq_data1:
+
 

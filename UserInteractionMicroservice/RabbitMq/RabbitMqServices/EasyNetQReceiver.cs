@@ -31,8 +31,9 @@ namespace NetQ
                 {
                     try
                     {
-                        MonitorService.Log.Information("Received message: {0}", notificationDto.Message);
+                        MonitorService.Log.Information("Received message: {0}", notificationDto);
                         notificationService.CreateNotification(notificationDto);
+
                     }
                     catch (Exception e)
                     {
@@ -46,6 +47,12 @@ namespace NetQ
                 {
                     MonitorService.Log.Information("Listening for messages");
                     await Task.Delay(1000, stoppingToken);
+                    messageClient.Publish(new NotificationDto()
+                    {
+                        UserId = "2",
+                        Message = "Test message",
+                        Type = "Test"
+                    }, "NewQueue");
                 }
 
                 MonitorService.Log.Information("Stopped listening for messages");

@@ -24,9 +24,9 @@ public class NotificationRepo : INotificationRepo
     {
         try
         {
-            _dbContext.Notifications.Add(notification);
+            await _dbContext.Notifications.AddAsync(notification);
 
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -35,12 +35,19 @@ public class NotificationRepo : INotificationRepo
         }
     }
 
-    public Task<Notification> GetNotificationById(int id)
+    public async Task<Notification> GetNotificationById(int id)
     {
         try
         {
-            return _dbContext.Notifications.FirstOrDefaultAsync(n => n.Id == id);
-        }
+            var notification = await _dbContext.Notifications.FirstOrDefaultAsync(n => n.Id == id);
+
+            if (notification == null)
+            {
+                throw new Exception("Did not find notification with that id");
+            }
+
+            return notification;
+         }
         catch (Exception e)
         {
             MonitorService.Log.Error(e.Message);
@@ -76,20 +83,20 @@ public class NotificationRepo : INotificationRepo
         }
     }
 
-    public Task<bool> DeleteNotification(int id)
+    public async Task<bool> DeleteNotification(int id)
     {
         try
         {
-            var notificationToDelete = _dbContext.Notifications.FirstOrDefault(n => n.Id == id);
+            var notificationToDelete = await _dbContext.Notifications.FirstOrDefaultAsync(n => n.Id == id);
 
             if (notificationToDelete != null)
             {
                 _dbContext.Notifications.Remove(notificationToDelete);
-                _dbContext.SaveChangesAsync();
-                return Task.FromResult(true);
+                await _dbContext.SaveChangesAsync();
+                return true;
             }
 
-            return Task.FromResult(false);
+            return false;
         }
         catch (Exception e)
         {
@@ -106,6 +113,29 @@ public class NotificationRepo : INotificationRepo
 
         return "User created";
     }
+
+    public async Task<User> GetUserById(string userId)
+{
+    try
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        
+        // If user doesn't exist, create a new one
+        if (user == null)
+        {
+            user = new User { Id = userId, /* other properties */ };
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        return user;
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e);
+        throw;
+    }
+}
 
     public void RebuildDB()
     {

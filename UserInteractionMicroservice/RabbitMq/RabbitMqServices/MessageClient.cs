@@ -18,6 +18,11 @@ namespace NetQ
         {
             _bus.PubSub.Subscribe(queueName, handler);
         }
+
+        public void Publish<T>(T message, string queueName)
+        {
+            _bus.PubSub.Publish(message, queueName);
+        }
       
     }
 }

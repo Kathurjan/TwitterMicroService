@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using RabbitMq.RabbitMqIServices;
 using Application.Interfaces;
 using DTO;
 using Entities;
@@ -10,13 +9,11 @@ namespace Controllers.UserInteractionController;
 [Route("api/[controller]")]
 public class UserInteractionController : ControllerBase
 {
-    private readonly IRabbitMqSender _rabbitMqSender;
 
     private readonly INotificationService _notificationService;
 
-    public UserInteractionController(IRabbitMqSender rabbitMqSender, INotificationService notificationService)
+    public UserInteractionController(INotificationService notificationService)
     {
-        _rabbitMqSender = rabbitMqSender;
         _notificationService = notificationService;
     }
     
@@ -46,6 +43,8 @@ public class UserInteractionController : ControllerBase
     {
        _notificationService.RebuildDB();
     }
+
+    
    
 
 

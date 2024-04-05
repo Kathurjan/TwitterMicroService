@@ -11,6 +11,8 @@ public interface INotificationRepo
     Task<Notification> UpdateNotification(Notification notification);
     Task<bool> DeleteNotification(int id);
 
+    Task<User> GetUserById(string userId);
+
     Task<ActionResult<string>> CreateTestUser(User user);
 
     void RebuildDB();
