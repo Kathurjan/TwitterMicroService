@@ -1,6 +1,8 @@
 ﻿
+using FeedHandlingMicroservice.Models;
+
 namespace FeedHandlingMicroservice.RabbitMq.Interfaces;
 public interface IRabbitMqSender
 {
-    public void SendUserId(int id);
+    public void SendUserId(NotificationDto notificationDto);
 }
