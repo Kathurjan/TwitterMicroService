@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DTO;
 using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
 
