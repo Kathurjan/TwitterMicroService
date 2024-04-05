@@ -1,5 +1,7 @@
 using DTO;
 using EasyNetQ;
+using Sharedmodel;
+
 namespace NetQ
 {
     public class MessageHandler : BackgroundService

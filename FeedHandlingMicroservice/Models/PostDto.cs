@@ -12,10 +12,3 @@ public class HashtagDto
 {
     public string Tag { get; set; } 
 }
-
-public class NotificationDto
-{
-    public string Message { get; set; }
-    public int UserId { get; set; }
-    public string Type { get; set; }
-}

@@ -3,6 +3,7 @@ using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
 
 using NetQ;
+using Sharedmodel;
 
 
 namespace FeedHandlingMicroservice.App;
@@ -34,7 +35,7 @@ public class PostService : IPostService
         {
             NotificationDto notificationDto = new NotificationDto
             {
-                UserId = post.UserId,
+                UserId = post.UserId.ToString(),
                 Message = post.Content,
                 Type = "Post"
 

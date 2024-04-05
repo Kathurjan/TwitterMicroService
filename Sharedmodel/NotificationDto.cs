@@ -1,4 +1,4 @@
-namespace DTO;
+﻿namespace Sharedmodel;
 
 public class NotificationDto
 {
