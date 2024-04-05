@@ -1,35 +1,38 @@
 ﻿services:
-  seq:
-    image: datalust/seq
+  rabbitmq:
+    image: rabbitmq:management
     ports:
-      - "5342:80"
-      - "5341:5341"
-    volumes:
-      - rps_seq_data1:/data
+      - "5672:5672"
+      - "15672:15672"
     environment:
-      - ACCEPT_EULA=Y
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5341/healthz"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
 
+  authmicroservice:
+    image: authmicroservice
+    build:
+      context: .
+      dockerfile: AuthMicroservice/Dockerfile
+    depends_on:
+      - rabbitmq
 
+  userinteractionmicroservice:
+    image: userinteractionmicroservice
+    build:
+      context: .
+      dockerfile: UserInteractionMicroservice/Dockerfile
+    depends_on:
+      - rabbitmq
 
-  mysql_db1:
-      image: mysql:latest
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: password_db1
-        MYSQL_DATABASE: db1
-      ports:
-        - "1433:1433"
-      volumes:
-        - mysql_data_db1:/var/lib/mysql
+  feedhandlingmicroservice:
+    image: feedhandlingmicroservice
+    build: 
+      context: .
+      dockerfile: FeedHandlingMicroservice/Dockerfile
+    depends_on:
+      - rabbitmq
 
-
-volumes:
-  mysql_data_db1:
-  rps_seq_data1:
-
-
+networks:
+  default:
+    external:
+      name: microservices
