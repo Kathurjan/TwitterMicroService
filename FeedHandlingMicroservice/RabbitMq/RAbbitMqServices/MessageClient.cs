@@ -21,8 +21,10 @@ namespace NetQ
 
         public void Publish<T>(T message, string queueName)
         {
-
-            _bus.PubSub.Publish(message, queueName);
+            Console.WriteLine("Publishing message");
+            _bus.PubSub.Publish("message", queueName);
+            Console.WriteLine("creationNotification");
+            Console.WriteLine("Message published");
         }
       
     }

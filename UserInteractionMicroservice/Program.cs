@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using EasyNetQ;
 using NetQ;
 
-
-
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=localhost")));
+var connectionStr = "amqp://guest:guest@localhost";
+
+builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus(connectionStr)));
 builder.Services.AddHostedService<MessageHandler>();
+
 var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
 builder.Services.AddDbContext<UserInteractionDbContext>(options =>
     options.UseSqlServer(_connectionStringUseSqlServer));
@@ -47,8 +47,6 @@ app.UseCors(options =>
         .AllowAnyHeader()
         .AllowCredentials();
 });
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

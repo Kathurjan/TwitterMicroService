@@ -25,7 +25,9 @@ var config = new MapperConfiguration(conf =>
 });
 builder.Services.AddSingleton(config.CreateMapper());
 
-builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=localhost")));
+var connectionStr = "amqp://guest:guest@localhost";
+
+builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus(connectionStr)));
 builder.Services.AddHostedService<MessageHandler>();
 // Add services
 builder.Services.AddScoped<IPostRepo, PostRepo>();

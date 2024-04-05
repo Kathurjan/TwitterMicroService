@@ -1,54 +1,36 @@
-using Application.Interfaces;
 using DTO;
 using EasyNetQ;
-using Monitor;
 
 namespace NetQ
 {
     public class MessageHandler : BackgroundService
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public MessageHandler(IServiceProvider serviceProvider)
-        {
-            _serviceProvider =
-                serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            var connectionStr = "amqp://guest:guest@localhost:5672/";
+
+            var messageClient = new MessageClient(RabbitHutch.CreateBus(connectionStr));
+
+            messageClient.Listen<string>(OnMessageReceived, "notificationCreation");
+
+            void OnMessageReceived(string notificationDto)
             {
-                var serviceProvider = scope.ServiceProvider;
-                var notificationService =
-                    serviceProvider.GetRequiredService<INotificationService>();
-
-                var messageClient = new MessageClient(RabbitHutch.CreateBus("host=localhost"));
-
-
-
-                void OnMessageReceived(NotificationDto notificationDto)
+                try
                 {
-                    try
-                    {
-                        MonitorService.Log.Information("Received message: {0}", notificationDto);
-                        notificationService.CreateNotification(notificationDto);
-                    }
-                    catch (Exception e)
-                    {
-                        MonitorService.Log.Error(e.Message);
-                    }
+                    Console.WriteLine("Notification received");
+
+                    Console.WriteLine(notificationDto);
                 }
-
-                messageClient.Listen<NotificationDto>(OnMessageReceived, "notificationCreation");
-
-                while (!stoppingToken.IsCancellationRequested)
+                catch (Exception e)
                 {
-                    MonitorService.Log.Information("Listening for messages");
-                    await Task.Delay(1000, stoppingToken);
+                    Console.WriteLine(e.Message);
                 }
+            }
 
-                MonitorService.Log.Information("Stopped listening for messages");
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                Console.WriteLine("MessageHandler is listening.");
+                await Task.Delay(1000, stoppingToken);
             }
         }
     }
