@@ -1,5 +1,9 @@
 using EasyNetQ;
 using FeedHandlingMicroservice.Models;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using NetQ;
 
 namespace FeedHandlingMicroservice.RabbitMq.RabbitMqServices;
@@ -11,10 +15,19 @@ public class MessageHandler : BackgroundService
         try
         {
             var connectionStr = "amqp://guest:guest@localhost:5672/";
+            var bus = RabbitHutch.CreateBus(connectionStr);
 
-            var messageClient = new MessageClient(RabbitHutch.CreateBus(connectionStr));
+            var messageClient = new MessageClient(bus);
 
+            // Example subscription, replace 'YourMessageType' with your actual message type.
+            // The "subscriptionId" should be unique for each type of subscription.
+            messageClient.Listen<NotificationDto>(message =>
+            {
+                // Process message here
+                Console.WriteLine($"Received message: {message}");
+            }, "subscriptionId");
 
+            // Keep the service running
             while (!stoppingToken.IsCancellationRequested)
             {
                 Console.WriteLine("MessageHandler is listening.");
@@ -23,12 +36,12 @@ public class MessageHandler : BackgroundService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine($"An error occurred: {e.Message}");
             throw;
         }
-
-        Console.WriteLine("MessageHandler is stopping.");
-
-
+        finally
+        {
+            Console.WriteLine("MessageHandler is stopping.");
+        }
     }
 }

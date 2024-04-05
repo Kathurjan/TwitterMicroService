@@ -1,6 +1,5 @@
 using DTO;
 using EasyNetQ;
-
 namespace NetQ
 {
     public class MessageHandler : BackgroundService
@@ -9,17 +8,18 @@ namespace NetQ
         {
             var connectionStr = "amqp://guest:guest@localhost:5672/";
 
+            // Assuming MessageClient is correctly set up to create an EasyNetQ bus.
             var messageClient = new MessageClient(RabbitHutch.CreateBus(connectionStr));
 
-            messageClient.Listen<string>(OnMessageReceived, "notificationCreation");
+            // Adjusted to listen for NotificationDto instead of string.
+            messageClient.Listen<NotificationDto>(OnMessageReceived, "notificationSubscription");
 
-            void OnMessageReceived(string notificationDto)
+            void OnMessageReceived(NotificationDto notification)
             {
                 try
                 {
-                    Console.WriteLine("Notification received");
-
-                    Console.WriteLine(notificationDto);
+                    // Now directly processing NotificationDto object.
+                    Console.WriteLine($"Notification received for UserId: {notification.UserId}, Message: {notification.Message}");
                 }
                 catch (Exception e)
                 {
@@ -29,7 +29,7 @@ namespace NetQ
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                Console.WriteLine("MessageHandler is listening.");
+                Console.WriteLine("MessageHandler is listening for notifications.");
                 await Task.Delay(1000, stoppingToken);
             }
         }

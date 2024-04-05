@@ -43,7 +43,7 @@ public class PostService : IPostService
             
             var createdPost = await _postRepo.CreatePost(post);
             
-            _messageClient.Publish(notificationDto, "notificationCreation");
+            _messageClient.Publish(notificationDto);
           
             Console.WriteLine(notificationDto.Message);
             Console.WriteLine("Post created and notification sent");
