@@ -29,4 +29,9 @@
     </Content>
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\UserInteractionMicroservice\UserInteractionMicroservice.csproj" />
+  </ItemGroup>
+
 </Project>

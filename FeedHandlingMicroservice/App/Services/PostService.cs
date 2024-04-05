@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using DTO;
 using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
 
 using NetQ;
+using SharedLibrary;
 
 
 namespace FeedHandlingMicroservice.App;
@@ -32,9 +34,9 @@ public class PostService : IPostService
         }
         try
         {
-            NotificationDto notificationDto = new NotificationDto
+            NotificationDto notificationDto = new NotificationDto()
             {
-                UserId = post.UserId,
+                UserId = post.UserId.ToString(),
                 Message = post.Content,
                 Type = "Post"
 

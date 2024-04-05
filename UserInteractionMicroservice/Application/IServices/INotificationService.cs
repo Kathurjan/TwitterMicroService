@@ -2,6 +2,7 @@
 using DTO;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using SharedLibrary;
 
 namespace Application.Interfaces
 {

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using DTO;
 using Entities;
+using SharedLibrary;
 
 namespace Controllers.UserInteractionController; 
 
