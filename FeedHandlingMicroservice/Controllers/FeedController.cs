@@ -123,20 +123,20 @@ public class FeedController : ControllerBase
     {
         try
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            var rawId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            
             
             // Check if the "id" claim is present
-            if (userId == null)
+            if (rawId == null)
             {
                 throw new Exception("User ID claim not found.");
             }
 
-            PostDto postDto = new PostDto {
-                UserId = int.Parse(userId),
-                Content = content
-            };
+            var userId = int.Parse(rawId);
+
+
             
-            var updatedPost = await _postService.UpdatePost(postDto, postId);
+            var updatedPost = await _postService.UpdatePost(userId, postId);
             return updatedPost;
         }
         catch (Exception e)

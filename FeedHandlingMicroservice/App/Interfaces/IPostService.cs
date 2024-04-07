@@ -10,6 +10,6 @@ public interface IPostService
     Task<List<Post>> GetAllPost();
     Task<List<Post>> GetAllPostByUserId(int userId);
     Task<Post> DeletePost(int id);
-    Task<Post> UpdatePost(PostDto postDto, int postId);
+    Task<Post> UpdatePost(int userId, int postId);
     void RebuildDB();
 }

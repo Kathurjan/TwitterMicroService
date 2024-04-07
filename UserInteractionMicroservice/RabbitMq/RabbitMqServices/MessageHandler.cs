@@ -1,4 +1,5 @@
-using DTO;
+
+using Application.Interfaces;
 using EasyNetQ;
 using Sharedmodel;
 
@@ -6,33 +7,51 @@ namespace NetQ
 {
     public class MessageHandler : BackgroundService
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public MessageHandler(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var connectionStr = "amqp://guest:guest@localhost:5672/";
-
-            // Assuming MessageClient is correctly set up to create an EasyNetQ bus.
-            var messageClient = new MessageClient(RabbitHutch.CreateBus(connectionStr));
-
-            // Adjusted to listen for NotificationDto instead of string.
-            messageClient.Listen<NotificationDto>(OnMessageReceived, "notificationSubscription");
-
-            void OnMessageReceived(NotificationDto notification)
+            using (var scope = _serviceProvider.CreateScope())
             {
-                try
-                {
-                    // Now directly processing NotificationDto object.
-                    Console.WriteLine($"Notification received for UserId: {notification.UserId}, Message: {notification.Message}");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
 
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                Console.WriteLine("MessageHandler is listening for notifications.");
-                await Task.Delay(1000, stoppingToken);
+
+                var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
+
+                
+
+                var connectionStr = "amqp://guest:guest@localhost:5672/";
+
+                // Assuming MessageClient is correctly set up to create an EasyNetQ bus.
+                var messageClient = new MessageClient(RabbitHutch.CreateBus(connectionStr));
+
+                // Adjusted to listen for NotificationDto instead of string.
+                messageClient.Listen<NotificationDto>(
+                    OnMessageReceived,
+                    "notificationSubscription"
+                );
+
+                void OnMessageReceived(NotificationDto notification)
+                {
+                    try
+                    {
+                        notificationService.CreateNotification(notification);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    Console.WriteLine("MessageHandler is listening for notifications.");
+                    await Task.Delay(1000, stoppingToken);
+                }
             }
         }
     }

@@ -67,10 +67,10 @@ public class NotificationSocket : Hub
     {
         return $"{userId}-{type}";
     }
-    public async Task SendNotification(Notification notification)
+    public void SendNotification(Notification notification)
     {
         var groupName = GenerateGroupName(notification.UserId, notification.Type);
         /* await Clients.Group(groupName).SendAsync("ReceiveNotification", notification); */
-        Console.WriteLine(notification.Message+ " Sent to notification group: "+ groupName);
+        Console.WriteLine(notification.Message + " Sent to notification group: " + groupName);
     }
 }

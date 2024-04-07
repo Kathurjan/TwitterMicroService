@@ -1,8 +1,8 @@
 using Application.Interfaces;
-using DTO;
 using Entities;
 using Infrastructure.IRepositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Sharedmodel;
 using Sockets;
 
@@ -10,18 +10,24 @@ namespace Application.Services
 {
     public class NotificationService : INotificationService
     {
-        private NotificationSocket _notificationSocket;
+         private readonly IHubContext<NotificationSocket> _hubContext;
         private readonly INotificationRepo _notificationRepo;
 
-        public NotificationService(INotificationRepo notificationRepo)
+        public NotificationService(INotificationRepo notificationRepo, IHubContext<NotificationSocket> hubContext)
         {
             _notificationRepo = notificationRepo;
+            _hubContext = hubContext;
         }
 
         public async Task CreateNotification(NotificationDto notificationDto)
         {
             try
             {
+                Console.WriteLine("Creating notification");
+                Console.WriteLine(notificationDto.Message);
+                Console.WriteLine(notificationDto.UserId);
+                Console.WriteLine(notificationDto.Type);
+                
                 var user = await _notificationRepo.GetUserById(notificationDto.UserId) ?? throw new Exception("User not found");
 
                 Notification notification = new Notification()
@@ -34,8 +40,8 @@ namespace Application.Services
 
                 await _notificationRepo.CreateNotification(notification);
 
-                Console.WriteLine(notification.Message);
-                await _notificationSocket.SendNotification(notification);
+                var groupName = $"{notification.Id}-{notification.Type}";
+                await _hubContext.Clients.Group(groupName).SendAsync("ReceiveNotification", notificationDto);
             }
             catch (Exception e)
             {

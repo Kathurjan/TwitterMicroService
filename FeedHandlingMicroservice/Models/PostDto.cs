@@ -3,7 +3,6 @@
 
 public class PostDto
     {
-        public int UserId { get; set; }
         public string Content { get; set; }
         public List<string> Hashtags { get; set; } = new List<string>();
     }
