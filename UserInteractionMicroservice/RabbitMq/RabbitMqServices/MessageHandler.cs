@@ -20,10 +20,17 @@ namespace NetQ
             {
 
 
-                var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
+            var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 
                 
 
+            messageClient.Listen<NotificationDto>(OnMessageReceived, "notificationCreation");
+
+            void OnMessageReceived(NotificationDto notificationDto)
+            {
+                try
+                {
+                    Console.WriteLine("Notification received");
                 var connectionStr = "amqp://guest:guest@rabbitmq:5672/";
 
                 // Assuming MessageClient is correctly set up to create an EasyNetQ bus.

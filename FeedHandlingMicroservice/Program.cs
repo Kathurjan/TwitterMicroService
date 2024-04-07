@@ -3,7 +3,6 @@ using AutoMapper;
 using FeedHandlingMicroservice.App;
 using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
-using FeedHandlingMicroservice.RabbitMq.RabbitMqServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

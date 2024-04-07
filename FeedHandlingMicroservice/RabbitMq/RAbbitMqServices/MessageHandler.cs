@@ -5,6 +5,7 @@ using Sharedmodel;
 
 namespace FeedHandlingMicroservice.RabbitMq.RabbitMqServices;
 
+namespace NetQ;
 public class MessageHandler : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

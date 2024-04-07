@@ -1,4 +1,5 @@
 using EasyNetQ;
+using SharedLibrary;
 
 namespace NetQ
 {
@@ -20,7 +21,6 @@ namespace NetQ
         {
             Console.WriteLine("Publishing message");
             _bus.PubSub.Publish(message);
-            Console.WriteLine("Message published");
-        }
     }
+  }
 }

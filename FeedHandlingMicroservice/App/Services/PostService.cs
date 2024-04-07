@@ -6,6 +6,7 @@ using NetQ;
 using Sharedmodel;
 
 
+
 namespace FeedHandlingMicroservice.App;
 
 public class PostService : IPostService
@@ -22,8 +23,6 @@ public class PostService : IPostService
         _messageClient = messageClient;
     }
  
-
-    
     public async Task<Post> CreatePost(Post post)
 
     {
@@ -33,13 +32,14 @@ public class PostService : IPostService
         }
         try
         {
-            NotificationDto notificationDto = new NotificationDto
+            NotificationDto notificationDto = new NotificationDto()
             {
                 UserId = post.UserId.ToString(),
                 Message = post.Content,
                 Type = "Post"
 
             };
+            
             post.CreationDate = DateTime.Now;
             
             var createdPost = await _postRepo.CreatePost(post);

@@ -3,6 +3,7 @@ using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Sharedmodel;
 
+
 namespace Application.Interfaces
 {
     public interface INotificationService

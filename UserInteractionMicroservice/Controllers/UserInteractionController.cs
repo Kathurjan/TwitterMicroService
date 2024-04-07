@@ -42,6 +42,13 @@ public class UserInteractionController : ControllerBase
         {
             return BadRequest(e.Message);
         }
+
+    [HttpPost("CreateTestUser")]
+    public async Task<ActionResult<string>> CreateTestUser(UserCreationDTO userCreationDTO)
+    {
+        var result = await _notificationService.CreateTestUser(userCreationDTO.UserId);
+
+        return Ok(result);
     }
 
     [HttpPost("RebuildDB")]
