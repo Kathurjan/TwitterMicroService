@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Entities;
+using DTO;
 using Infrastructure.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -23,16 +24,12 @@ namespace Application.Services
         {
             try
             {
-                Console.WriteLine("Creating notification");
-                Console.WriteLine(notificationDto.Message);
-                Console.WriteLine(notificationDto.UserId);
-                Console.WriteLine(notificationDto.Type);
-                
+
                 var user = await _notificationRepo.GetUserById(notificationDto.UserId) ?? throw new Exception("User not found");
 
                 Notification notification = new Notification()
                 {
-                    UserId = notificationDto.UserId,
+                    CreatorId = notificationDto.UserId,
                     Type = notificationDto.Type,
                     Message = notificationDto.Message,
                     DateOfDelivery = DateTime.Now
@@ -40,7 +37,8 @@ namespace Application.Services
 
                 await _notificationRepo.CreateNotification(notification);
 
-                var groupName = $"{notification.Id}-{notification.Type}";
+                var groupName = $"{notification.CreatorId}-{notification.Type}";
+                Console.WriteLine(groupName);
                 await _hubContext.Clients.Group(groupName).SendAsync("ReceiveNotification", notificationDto);
             }
             catch (Exception e)
@@ -51,21 +49,11 @@ namespace Application.Services
             }
         }
 
-        public Task<List<string>> GetFollowedEntities(string userId)
+        public async Task<List<Subscriptions>> GetSubscriptions(string userId)
         {
-            List<string> followedEntities = new List<string>()
-            {
-                "1", // Example entity ID
-                "2", // Example entity ID
-                "3" // Example entity ID
-            };
+            var subscriptions = await _notificationRepo.GetSubscriptions(userId);
 
-            return Task.FromResult(followedEntities);
-        }
-
-        public Task GetNotificationsByUserId(string userId)
-        {
-            throw new NotImplementedException();
+            return subscriptions;
         }
 
         public async Task<ActionResult<string>> CreateTestUser(string userId)
@@ -76,6 +64,28 @@ namespace Application.Services
 
             return result;
         }
+
+        public async Task<ActionResult<string>> SubscribeToNotification(SubscribtionDTO subscribtionDTO)
+        {
+
+            if(subscribtionDTO.FollowerId == subscribtionDTO.CreatorId && subscribtionDTO.Type != "FriendRequest")
+            {
+                return "You can't subscribe to yourself";
+            }
+
+            var notifcationRelation = new Subscriptions()
+            {
+                CreatorId = subscribtionDTO.CreatorId,
+                FollowerId = subscribtionDTO.FollowerId,
+                Type = subscribtionDTO.Type
+            };
+
+            await _notificationRepo.CreateSubscription(notifcationRelation);
+
+            return "Subscribed";
+        }
+
+
 
         public void RebuildDB()
         {

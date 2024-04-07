@@ -3,6 +3,7 @@ using Application.Interfaces;
 using DTO;
 using Entities;
 using Sharedmodel;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Controllers.UserInteractionController; 
 
@@ -18,25 +19,29 @@ public class UserInteractionController : ControllerBase
         _notificationService = notificationService;
     }
     
-    [HttpPost("Notify")]
-    public void ConsumeNotification(NotificationDto notification)
+    [HttpPost("SubscribeToNotification")]
+    public async Task<ActionResult<string>> SubscribeToNotification(SubscribtionDTO subscribtionDTO)
     {
-        Console.WriteLine("UserInteractionController: " + notification.Message);
-        _notificationService.CreateNotification(notification);
-    }
+        try
+        {
+            var rawId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
 
-    [HttpPost("NotificationTest")]
-    public void CreateNotification(NotificationDto notificationDto)
-    {
-        _notificationService.CreateNotification(notificationDto);
-    }
+            if (rawId == null)
+            {
+                return BadRequest("User ID is required.");
+            }
 
-    [HttpPost("CreateTestUser")]
-    public async Task<ActionResult<string>> CreateTestUser(UserCreationDTO userCreationDTO)
-    {
-        var result = await _notificationService.CreateTestUser(userCreationDTO.UserId);
+            var userId = int.Parse(rawId);
 
-        return Ok(result);
+            subscribtionDTO.FollowerId = userId.ToString();
+
+            await _notificationService.SubscribeToNotification(subscribtionDTO);
+            return Ok("Notification created");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPost("RebuildDB")]
