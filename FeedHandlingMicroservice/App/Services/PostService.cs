@@ -3,7 +3,8 @@ using FeedHandlingMicroservice.DataAccess;
 using FeedHandlingMicroservice.Models;
 
 using NetQ;
-using SharedLibrary;
+using Sharedmodel;
+
 
 
 namespace FeedHandlingMicroservice.App;
@@ -43,7 +44,7 @@ public class PostService : IPostService
             
             var createdPost = await _postRepo.CreatePost(post);
             
-            _messageClient.Publish(notificationDto, "notificationCreation");
+            _messageClient.Publish(notificationDto);
           
             Console.WriteLine(notificationDto.Message);
             Console.WriteLine("Post created and notification sent");
@@ -104,14 +105,14 @@ public class PostService : IPostService
         }
     }
 
-    public async Task<Post> UpdatePost(PostDto postDto, int postId)
+    public async Task<Post> UpdatePost(int userId, int postId)
     {
         try
         {
             var validationPost = await _postRepo.GetPostById(postId);
-            if (postDto.UserId == validationPost.UserId)
+            if (userId == validationPost.UserId)
             {
-                var post = _mapper.Map<Post>(postDto);
+                var post = _mapper.Map<Post>(userId);
                 post.Id = postId;
                 return await _postRepo.UpdatePost(post);
             }

@@ -2,7 +2,8 @@
 using DTO;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
-using SharedLibrary;
+using Sharedmodel;
+
 
 namespace Application.Interfaces
 {

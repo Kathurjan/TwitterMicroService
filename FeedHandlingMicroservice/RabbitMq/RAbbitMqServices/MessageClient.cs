@@ -1,32 +1,26 @@
 using EasyNetQ;
 using SharedLibrary;
 
-
 namespace NetQ
 {
     public class MessageClient
     {
         private readonly IBus _bus;
 
-  
-
         public MessageClient(IBus bus)
         {
             _bus = bus;
         }
 
-        public void Listen<T>(Action<T> handler, string queueName)
+        public void Listen<T>(Action<T> handler, string subscriptionId)
         {
-            _bus.PubSub.Subscribe(queueName, handler);
+            _bus.PubSub.Subscribe<T>(subscriptionId, handler);
         }
 
-        public void Publish<NotificationDto>(NotificationDto message, string queueName)
+        public void Publish<T>(T message)
         {
-            Console.WriteLine(message);
-            _bus.PubSub.Publish("message", queueName);
-            Console.WriteLine("creationNotification");
-            Console.WriteLine("Message published");
-        }
-      
+            Console.WriteLine("Publishing message");
+            _bus.PubSub.Publish(message);
     }
+  }
 }

@@ -1,13 +1,14 @@
 using System.Security.Claims;
+using System.Threading.Tasks.Dataflow;
+using Application.Interfaces;
+using DTO;
+using Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
-using Entities;
-using Application.Interfaces;
-using DTO;
-namespace Sockets;
 
+namespace Sockets;
 
 public class NotificationSocket : Hub
 {
@@ -15,43 +16,48 @@ public class NotificationSocket : Hub
     private readonly INotificationService _notificationService;
 
     public NotificationSocket(
-        INotificationService notificationService, 
+        INotificationService notificationService,
         IHubContext<NotificationSocket> notificationSocket
     )
     {
-        _notificationSocket = notificationSocket; 
+        _notificationSocket = notificationSocket;
         _notificationService = notificationService;
     }
 
     public override async Task OnConnectedAsync()
     {
-        var userId = Context.UserIdentifier;
-        if (!string.IsNullOrEmpty(userId)) // Check if userId is not null or empty
-        {
-        
-            var following = await _notificationService.GetFollowedEntities(userId); // Get entities the user is following
-            foreach (var entity in following)
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(entity, "following"));
-            }
-            await base.OnConnectedAsync();
-        }
-        else
-        {
-            Console.WriteLine("Invalid user identifier format or user identifier is null");
-        }
+        await base.OnConnectedAsync();
     }
 
     // Method to associate a connection with a notification group, called after user sends their identifier
-    public async Task FollowNotificationGroup(string userId)
+    public async Task Subscribe(SubscribtionDTO subscribtionDTO)
     {
-        Console.WriteLine(userId);
-        // Retrieve notification info for the user
-        await Groups.AddToGroupAsync(Context.ConnectionId, GenerateGroupName(userId, "following"));
-
+        try
+        {
+            await _notificationService.SubscribeToNotification(subscribtionDTO);
+            var groupName = GenerateGroupName(subscribtionDTO.CreatorId, subscribtionDTO.Type);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            Console.WriteLine("Added to group: " + groupName);
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Failed to subscribe to notification group");
+        }
     }
 
+    public async Task GetSubscription(string userId)
+    {
+        Console.WriteLine("Getting subscriptions for user: " + userId);
+        var subscriptions = await _notificationService.GetSubscriptions(userId);
 
+        foreach (var subscription in subscriptions)
+        {
+            var groupName = GenerateGroupName(subscription.CreatorId, subscription.Type);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            Console.WriteLine("Added to group: " + groupName);
+        }
+        await Clients.Caller.SendAsync("ReceiveSubscriptions", subscriptions);
+    }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
@@ -61,16 +67,16 @@ public class NotificationSocket : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
-
     // Helper method to create a consistent group name
     private string GenerateGroupName(string userId, string type)
     {
         return $"{userId}-{type}";
     }
-    public async Task SendNotification(Notification notification)
+
+    public void SendNotification(Notification notification)
     {
-        var groupName = GenerateGroupName(notification.UserId, notification.Type);
+        var groupName = GenerateGroupName(notification.CreatorId, notification.Type);
         /* await Clients.Group(groupName).SendAsync("ReceiveNotification", notification); */
-        Console.WriteLine(notification.Message+ " Sent to notification group: "+ groupName);
+        Console.WriteLine(notification.Message + " Sent to notification group: " + groupName);
     }
 }

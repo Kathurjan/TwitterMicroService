@@ -4,18 +4,13 @@ using Infrastructure.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
-
 namespace Infrastructure.Repositories;
 
 public class NotificationRepo : INotificationRepo
 {
-
-
-
     private readonly UserInteractionDbContext _dbContext;
-    public NotificationRepo(UserInteractionDbContext dbContext)
 
+    public NotificationRepo(UserInteractionDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -35,30 +30,32 @@ public class NotificationRepo : INotificationRepo
         }
     }
 
-    public async Task<Notification> GetNotificationById(int id)
+    public Task<List<Notification>> GetNotificationsByUserIdAndType(string creatorId, string type)
     {
         try
         {
-            var notification = await _dbContext.Notifications.FirstOrDefaultAsync(n => n.Id == id);
+            var notifications = _dbContext
+                .Notifications.Where(n => n.CreatorId == creatorId && n.Type == type)
+                .ToList();
 
-            if (notification == null)
-            {
-                throw new Exception("Did not find notification with that id");
-            }
-
-            return notification;
-         }
+            return Task.FromResult(notifications);
+        }
         catch (Exception e)
         {
-            throw new Exception("Did not find notification with that id");
+            Console.WriteLine(e);
+            throw;
         }
     }
 
-    public Task<List<Notification>> GetNotificationsByUserId(string userId)
+    public async Task<List<Subscriptions>> GetSubscriptions(string userId)
     {
         try
         {
-            return _dbContext.Notifications.Where(n => n.UserId == userId).ToListAsync();
+            var subscriptions = await _dbContext
+                .Subscriptions.Where(n => n.FollowerId == userId)
+                .ToListAsync();
+
+            return subscriptions;
         }
         catch (Exception e)
         {
@@ -86,7 +83,9 @@ public class NotificationRepo : INotificationRepo
     {
         try
         {
-            var notificationToDelete = await _dbContext.Notifications.FirstOrDefaultAsync(n => n.Id == id);
+            var notificationToDelete = await _dbContext.Notifications.FirstOrDefaultAsync(n =>
+                n.Id == id
+            );
 
             if (notificationToDelete != null)
             {
@@ -114,27 +113,31 @@ public class NotificationRepo : INotificationRepo
     }
 
     public async Task<User> GetUserById(string userId)
-{
-    try
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
-        
-        // If user doesn't exist, create a new one
-        if (user == null)
+        try
         {
-            user = new User { Id = userId, /* other properties */ };
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-        }
+            Console.WriteLine($"User ID: {userId}");
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-        return user;
+            // If user doesn't exist, create a new one
+            if (user == null)
+            {
+                user = new User
+                {
+                    Id = userId, /* other properties */
+                };
+                _dbContext.Users.Add(user);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return user;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
-    catch (Exception e)
-    {
-        Console.WriteLine(e);
-        throw;
-    }
-}
 
     public void RebuildDB()
     {
@@ -147,6 +150,25 @@ public class NotificationRepo : INotificationRepo
         catch (Exception e)
         {
             Console.WriteLine(e);
+        }
+    }
+
+    public async Task<bool> CreateSubscription(Subscriptions subscription)
+    {
+        try
+        {
+            Console.WriteLine(subscription.FollowerId);
+            Console.WriteLine(subscription.CreatorId);
+            Console.WriteLine(subscription.Type);
+
+            await _dbContext.Subscriptions.AddAsync(subscription);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
 }

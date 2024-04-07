@@ -12,9 +12,11 @@ using NetQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
+
 // Add DbContext
 builder.Services.AddDbContext<PostDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PostDb")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FeedDb")));
 
 // Add AutoMapper
 var config = new MapperConfiguration(conf =>
@@ -24,7 +26,7 @@ var config = new MapperConfiguration(conf =>
 });
 builder.Services.AddSingleton(config.CreateMapper());
 
-var connectionStr = "amqp://guest:guest@localhost";
+var connectionStr = "amqp://guest:guest@rabbitmq";
 
 builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus(connectionStr)));
 builder.Services.AddHostedService<MessageHandler>();
@@ -68,38 +70,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Add authorization services
 builder.Services.AddAuthorization();
 
-// Add Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
-});
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -114,4 +84,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

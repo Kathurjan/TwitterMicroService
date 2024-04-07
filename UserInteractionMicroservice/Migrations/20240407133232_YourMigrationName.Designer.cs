@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace UserInteractionMicroservice.Migrations
 {
     [DbContext(typeof(UserInteractionDbContext))]
-    [Migration("20240321111939_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240407133232_YourMigrationName")]
+    partial class YourMigrationName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,15 @@ namespace UserInteractionMicroservice.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("DateOfDelivery")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasSeen")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -44,18 +51,14 @@ namespace UserInteractionMicroservice.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("Entities.NotificationUserRelation", b =>
+            modelBuilder.Entity("Entities.Subscriptions", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,23 +66,23 @@ namespace UserInteractionMicroservice.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("HasSeen")
-                        .HasColumnType("bit");
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("FollowerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("NotificationId");
+                    b.HasIndex("FollowerId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("NotificationUserRelationts");
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Entities.User", b =>
@@ -96,42 +99,29 @@ namespace UserInteractionMicroservice.Migrations
                 {
                     b.HasOne("Entities.User", "User")
                         .WithMany("Notifications")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Entities.NotificationUserRelation", b =>
+            modelBuilder.Entity("Entities.Subscriptions", b =>
                 {
-                    b.HasOne("Entities.Notification", "Notification")
-                        .WithMany("NotificationUserRelations")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Entities.User", "User")
-                        .WithMany("NotificationUserRelations")
-                        .HasForeignKey("UserId")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Notification");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Entities.Notification", b =>
-                {
-                    b.Navigation("NotificationUserRelations");
-                });
-
             modelBuilder.Entity("Entities.User", b =>
                 {
-                    b.Navigation("NotificationUserRelations");
-
                     b.Navigation("Notifications");
+
+                    b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,29 +13,21 @@ public class UserInteractionDbContext : Microsoft.EntityFrameworkCore.DbContext
 
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<NotificationUserRelation> NotificationUserRelationts { get; set; }
+    public DbSet<Subscriptions> Subscriptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.User)
             .WithMany(u => u.Notifications)
-            .HasForeignKey(n => n.UserId)
+            .HasForeignKey(n => n.CreatorId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<NotificationUserRelation>()
-            .HasOne(nur => nur.Notification)
-            .WithMany(n => n.NotificationUserRelations)
-            .HasForeignKey(nur => nur.NotificationId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<NotificationUserRelation>()
+        modelBuilder.Entity<Subscriptions>()
             .HasOne(nur => nur.User)
-            .WithMany(u => u.NotificationUserRelations)
-            .HasForeignKey(nur => nur.UserId)
+            .WithMany(u => u.Subscriptions)
+            .HasForeignKey(nur => nur.FollowerId)
             .OnDelete(DeleteBehavior.Cascade);
-
-
     }
 
 }

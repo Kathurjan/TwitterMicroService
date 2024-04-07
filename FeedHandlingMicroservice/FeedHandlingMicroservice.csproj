@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -31,7 +31,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\UserInteractionMicroservice\UserInteractionMicroservice.csproj" />
+    <ProjectReference Include="..\Sharedmodel\Sharedmodel.csproj" />
   </ItemGroup>
 
 </Project>
