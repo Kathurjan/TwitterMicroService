@@ -141,16 +141,8 @@ public class NotificationRepo : INotificationRepo
 
     public void RebuildDB()
     {
-        try
-        {
-            string connectionString = _dbContext.Database.GetDbConnection().ConnectionString;
-            Console.WriteLine($"Connection String: {connectionString}");
-            _dbContext.Database.EnsureCreatedAsync();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        _dbContext.Database.EnsureDeleted();
+        _dbContext.Database.EnsureCreated();
     }
 
     public async Task<bool> CreateSubscription(Subscriptions subscription)
