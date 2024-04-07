@@ -10,6 +10,8 @@ using DbContext = AuthMicroservice.DataAccess.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
+
 // Add services to the container.
 var config = new MapperConfiguration(conf =>
 {
@@ -35,17 +37,10 @@ builder.Services.AddDbContext<DbContext>(options =>
     options.UseInMemoryDatabase("AuthDatabase"));
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

@@ -24,7 +24,7 @@ namespace NetQ
 
                 
 
-                var connectionStr = "amqp://guest:guest@localhost:5672/";
+                var connectionStr = "amqp://guest:guest@rabbitmq:5672/";
 
                 // Assuming MessageClient is correctly set up to create an EasyNetQ bus.
                 var messageClient = new MessageClient(RabbitHutch.CreateBus(connectionStr));

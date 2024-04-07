@@ -11,7 +11,7 @@ public class MessageHandler : BackgroundService
     {
         try
         {
-            var connectionStr = "amqp://guest:guest@localhost:5672/";
+            var connectionStr = "amqp://guest:guest@rabbitmq:5672/";
             var bus = RabbitHutch.CreateBus(connectionStr);
 
             var messageClient = new MessageClient(bus);

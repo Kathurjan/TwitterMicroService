@@ -44,6 +44,12 @@ services:
         condition: service_healthy
       apigateway:
         condition: service_started
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+    volumes:
+      - /UserInteractionMicroservice/Migrations:/migrations
+    command: ["/bin/bash", "-c", "/opt/mssql-tools/bin/sqlcmd -U sa -P YourStrong!Passw0rd -i /migrations/create-database.sql"]
 
   feedhandlingmicroservice:
     image: feedhandlingmicroservice
@@ -57,3 +63,33 @@ services:
         condition: service_healthy
       apigateway:
         condition: service_started
+        
+  sqlserver1:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver1
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      MSSQL_DATABASE: "AuthDb"
+
+  sqlserver2:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver2
+    ports:
+      - "1434:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      MSSQL_DATABASE: "FeedDb"
+
+  sqlserver3:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver3
+    ports:
+      - "1435:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      MSSQL_DATABASE: "UserIntDb"

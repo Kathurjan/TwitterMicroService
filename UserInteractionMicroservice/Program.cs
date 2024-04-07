@@ -9,12 +9,14 @@ using NetQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionStr = "amqp://guest:guest@localhost";
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
+
+var connectionStr = "amqp://guest:guest@rabbitmq";
 
 builder.Services.AddSingleton(new MessageClient(RabbitHutch.CreateBus(connectionStr)));
 builder.Services.AddHostedService<MessageHandler>();
 
-var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:AuthDatabase");
+var _connectionStringUseSqlServer = builder.Configuration.GetValue<string>("ConnectionStrings:userInteractionDb");
 builder.Services.AddDbContext<UserInteractionDbContext>(options =>
     options.UseSqlServer(_connectionStringUseSqlServer));
 
@@ -53,4 +55,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapHub<NotificationSocket>("/SocketNotification");
-app.Run();
+await app.RunAsync();
